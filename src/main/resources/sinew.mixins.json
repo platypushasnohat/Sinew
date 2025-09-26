@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.unusualmodding.sinew.mixin",
+  "package": "com.unusualmodding.sinew.mixins",
   "compatibilityLevel": "JAVA_17",
   "refmap": "sinew.refmap.json",
   "mixins": [],

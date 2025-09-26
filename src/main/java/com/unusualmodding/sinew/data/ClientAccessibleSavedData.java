@@ -2,8 +2,8 @@ package com.unusualmodding.sinew.data;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
-import com.unusualmodding.sinew.message.SMessages;
-import com.unusualmodding.sinew.message.SyncSavedDataS2CPacket;
+import com.unusualmodding.sinew.network.SinewNetwork;
+import com.unusualmodding.sinew.network.SyncSavedDataS2CPacket;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -88,7 +88,7 @@ public abstract class ClientAccessibleSavedData<T extends ClientAccessibleSavedD
         if (level instanceof ServerLevel && id != null) {
             CompoundTag tag = new CompoundTag();
             this.save(tag);
-            SMessages.sendToClients(new SyncSavedDataS2CPacket(id, tag));
+            SinewNetwork.sendToClients(new SyncSavedDataS2CPacket(id, tag));
         }
     }
 

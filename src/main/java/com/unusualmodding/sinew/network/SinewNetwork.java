@@ -1,4 +1,4 @@
-package com.unusualmodding.sinew.message;
+package com.unusualmodding.sinew.network;
 
 import com.unusualmodding.sinew.Sinew;
 import net.minecraft.resources.ResourceLocation;
@@ -9,7 +9,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-public class SMessages {
+public class SinewNetwork {
     private static SimpleChannel INSTANCE;
 
     private static int packetId = 0;

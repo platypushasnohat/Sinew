@@ -1,7 +1,7 @@
-package com.unusualmodding.sinew.message;
+package com.unusualmodding.sinew.network;
 
 import com.unusualmodding.sinew.data.ClientAccessibleSavedData;
-import com.unusualmodding.sinew.util.ClientUtils;
+import com.unusualmodding.sinew.utils.ClientUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

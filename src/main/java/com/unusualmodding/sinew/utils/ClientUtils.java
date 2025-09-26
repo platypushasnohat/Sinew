@@ -1,4 +1,4 @@
-package com.unusualmodding.sinew.util;
+package com.unusualmodding.sinew.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

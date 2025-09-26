@@ -1,62 +1,67 @@
-plugins {
-    id 'eclipse'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
-    id 'org.spongepowered.mixin' version '0.7.+'
+buildscript {
+    repositories {
+        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
+    }
+    dependencies {
+        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true
+        classpath group: "org.spongepowered", name: "mixingradle", version: "0.7-SNAPSHOT"
+    }
 }
 
-version = "${mod_version}"
-group = "com.peeko32213.${mod_id}"
-archivesBaseName = "${mod_id}"
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "maven-publish"
+apply plugin: "org.spongepowered.mixin"
+
+mixin {
+    add sourceSets.main, "${project.modId}.refmap.json"
+}
+
+version = "${project.minecraft}-${project.modVersion}"
+group = "com.unusualmodding"
+archivesBaseName = "Sinew"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-
 minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}"
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
+    mappings channel: "official", version: project.minecraft
+    accessTransformer = file("src/main/resources/META-INF/accesstransformer.cfg")
     runs {
         client {
-            workingDirectory project.file('run')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
+            workingDirectory project.file("run")
+            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+            property "forge.logging.console.level", "debug"
+            property "mixin.env.remapRefMap", "true"
+            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
+            arg "-mixin.config=" + project.modId + ".mixins.json"
             mods {
                 sinew {
                     source sourceSets.main
                 }
             }
         }
-
         server {
-            workingDirectory project.file('run')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
+            workingDirectory project.file("run")
+            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+            property "forge.logging.console.level", "debug"
+            property "mixin.env.remapRefMap", "true"
+            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
+            arg "-mixin.config=" + project.modId + ".mixins.json"
             mods {
                 sinew {
                     source sourceSets.main
                 }
             }
         }
-
         data {
-            workingDirectory project.file('run')
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', "${mod_id}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/'), '--existing-mod'
-
+            workingDirectory project.file("run")
+            property "forge.logging.markers", "SCAN,REGISTRIES,REGISTRYDUMP"
+            property "forge.logging.console.level", "debug"
+            property "mixin.env.remapRefMap", "true"
+            property "mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg"
+            args "--mod", project.modId, "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources")
             mods {
                 sinew {
                     source sourceSets.main
@@ -66,92 +71,48 @@ minecraft {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    maven {
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-    maven {
-        name "JEI maven"
-        url = "https://maven.blamejared.com/"
-    }
-    maven {
-        name = 'GeckoLib'
-        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-        content {
-            includeGroupByRegex("software\\.bernie.*")
-            includeGroup("com.eliotlash.mclib")
-        }
-    }
-    flatDir {
-        dirs 'libs'
-    }
-}
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
+sourceSets.main.resources {
+    srcDir "src/generated/resources"
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:${geckolib_version}")
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    minecraft "net.minecraftforge:forge:${project.minecraft}-${project.forge}"
 
-    compileOnly("com.eliotlash.mclib:mclib:20")
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-    implementation fg.deobf("javax.vecmath:vecmath:1.5.2")
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixin_extras}"))
+    implementation("io.github.llamalad7:mixinextras-forge:${project.mixin_extras}")
 
-    // utils for dev
-    runtimeOnly fg.deobf("curse.maven:appleskin-248787:4770828")
-    runtimeOnly fg.deobf("curse.maven:commandstructures-565119:4711641")
-    runtimeOnly fg.deobf("curse.maven:structure-void-toggle-357304:4727098")
-    runtimeOnly fg.deobf("curse.maven:worldedit-225608:4586218")
+    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft}-common-api:${project.jei}")
+    compileOnly fg.deobf("mezz.jei:jei-${project.minecraft}-forge-api:${project.jei}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft}-forge:${project.jei}")
+
     runtimeOnly fg.deobf("curse.maven:cyanide-541676:5778405")
+
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }
 
-mixin {
-    add sourceSets.main, "${mod_id}.refmap.json"
-    config "${mod_id}.mixins.json"
-}
-
-java {
-    withSourcesJar()
+repositories {
+    maven { url "https://www.cursemaven.com" }
+    maven { url "https://modmaven.k-4u.nl" }
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "${mod_id}",
+                "Specification-Title"     : project.modName,
                 "Specification-Vendor"    : "Unusual Modding",
                 "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Title"    : project.modName,
+                "Implementation-Version"  : project.modVersion,
                 "Implementation-Vendor"   : "Unusual Modding",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs"            : project.modId + ".mixins.json"
         ])
     }
 }
 
-jar.finalizedBy('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
     }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
 }

@@ -1,6 +1,6 @@
 package com.unusualmodding.sinew;
 
-import com.unusualmodding.sinew.message.SMessages;
+import com.unusualmodding.sinew.network.SinewNetwork;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,6 +14,7 @@ import java.util.Locale;
 
 @Mod(Sinew.MODID)
 public class Sinew {
+
     public static final String MODID = "sinew";
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -24,11 +25,10 @@ public class Sinew {
     }
 
     public void commonSetup(final FMLCommonSetupEvent event) {
-
-        SMessages.register();
+        SinewNetwork.register();
     }
 
-    public static ResourceLocation prefix(String name) {
+    public static ResourceLocation modPrefix(String name) {
         return new ResourceLocation(MODID, name.toLowerCase(Locale.ROOT));
     }
 }
