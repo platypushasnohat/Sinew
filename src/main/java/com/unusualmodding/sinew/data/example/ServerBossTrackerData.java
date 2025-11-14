@@ -17,13 +17,11 @@ public class ServerBossTrackerData extends SimpleSavedData<ServerBossTrackerData
     public long firstKillTime = -1;
     public boolean defeated = false;
 
-    /** Codec constructor (used by Codec.parse) */
     public ServerBossTrackerData(long firstKillTime, boolean defeated) {
         this.firstKillTime = firstKillTime;
         this.defeated = defeated;
     }
 
-    /** NBT constructor (used by SavedData loading) */
     public ServerBossTrackerData(CompoundTag tag) {
         super(tag);
     }

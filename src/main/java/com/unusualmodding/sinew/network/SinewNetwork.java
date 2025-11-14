@@ -32,6 +32,25 @@ public class SinewNetwork {
                 SyncSavedDataS2CPacket::decode,
                 SyncSavedDataS2CPacket::handle);
 
+        net.registerMessage(id(), ScreenshakeS2CPacket.class,
+                ScreenshakeS2CPacket::encode,
+                ScreenshakeS2CPacket::decode,
+                ScreenshakeS2CPacket::handle);
+
+        net.messageBuilder(LightningDamagePacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(LightningDamagePacket::new)
+                .encoder(LightningDamagePacket::toBytes)
+                .consumerMainThread(LightningDamagePacket::handle)
+                .add();
+
+        net.messageBuilder(LightningSyncPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(LightningSyncPacket::new)
+                .encoder(LightningSyncPacket::toBytes)
+                .consumerMainThread(LightningSyncPacket::handle)
+                .add();
+
+
+
     }
 
     public static <MSG> void sendToServer(MSG message) {

@@ -29,9 +29,3 @@ issueTrackerURL = "https://github.com/PlatypusOfHats/Sinew/issues"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.sinew]]
-    modId = "geckolib"
-    mandatory = true
-    versionRange="[4.2,)"
-    ordering = "NONE"
-    side = "BOTH"

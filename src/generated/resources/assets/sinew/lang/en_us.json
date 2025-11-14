@@ -1,0 +1,14 @@
+{
+  "attribute.name.sinew.air_speed": "Air Speed",
+  "attribute.name.sinew.experience_gain": "Experience Gain",
+  "attribute.name.sinew.jump_power": "Jump Power",
+  "attribute.name.sinew.stealth": "Stealth",
+  "attribute.name.sinew.summon_damage": "Summon Damage",
+  "attribute.name.sinew.summon_duration": "Summon Duration",
+  "death.attack.electric": "%1$s met a shocking end",
+  "death.attack.electric.player": "%1$s was zapped by %2$s",
+  "effect.sinew.electrified": "Electrified",
+  "effect.sinew.electrified.description": "Inflicts electric damage over time while in water or rain; higher levels do more damage per second.",
+  "effect.sinew.stench": "Stench",
+  "effect.sinew.stench.description": "Makes the player stinky, prevents the player from eating"
+}
