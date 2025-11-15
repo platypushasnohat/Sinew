@@ -1,0 +1,23 @@
+package com.barlinc.sinew.event;
+
+import com.barlinc.sinew.Sinew;
+import com.barlinc.sinew.mob_effects.SinewMobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(modid = Sinew.MOD_ID,bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class ForgeEvents {
+
+    @SubscribeEvent
+    public static void preventEating(LivingEntityUseItemEvent.Start event) {
+        LivingEntity entity = event.getEntity();
+        ItemStack stack = event.getItem();
+        int duration = event.getDuration();
+        if(stack.isEdible() && entity.hasEffect(SinewMobEffects.STENCH.get())) {
+            event.setCanceled(true);
+        }
+    }
+}

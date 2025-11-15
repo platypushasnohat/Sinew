@@ -1,10 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.unusualmodding.sinew.mixins",
+  "package": "com.barlinc.sinew.mixins",
   "compatibilityLevel": "JAVA_17",
   "refmap": "sinew.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "StructureTemplateAccessor"
+  ],
   "client": [
     "client.GuiMixin"
   ],
