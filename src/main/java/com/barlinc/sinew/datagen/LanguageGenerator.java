@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class LanguageGenerator extends SinewLanguageProvider {
 
     public LanguageGenerator(PackOutput output) {
-        super(output, Sinew.MOD_ID);
+        super(Sinew.MOD_ID, output);
     }
 
     @Override
