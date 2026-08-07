@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.platypushasnohat.sinew.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "sinew.refmap.json",
+  "mixins": [
+    "ShearsItemMixin",
+    "SweetBerryBushBlockMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
