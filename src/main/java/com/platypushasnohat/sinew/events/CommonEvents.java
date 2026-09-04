@@ -50,17 +50,17 @@ public class CommonEvents {
         if (entity instanceof ServerPlayer serverPlayer) {
             ServerLevel overworld = serverPlayer.getServer().overworld();
             SinewWorldData worldData = SinewWorldData.get(overworld);
-            if (event.getTo().equals(Level.NETHER) && !worldData.hasNetherBeenEnteredBefore()) {
+            if (event.getTo() != Level.NETHER) {
+                return;
+            }
+            if (!worldData.hasNetherBeenEnteredBefore()) {
                 worldData.setHasNetherBeenEnteredBefore(true);
-                for (ServerPlayer player : serverPlayer.getServer().getPlayerList().getPlayers()) {
-                    player.playNotifySound(SinewSoundEvents.ENTER_NETHER.get(), SoundSource.HOSTILE, 2.0F, 1.0F);
-                    MutableComponent component = Component.translatable("sinew.nether_progression.enabled");
-                    component = component.withStyle(ChatFormatting.RED);
-                    player.sendSystemMessage(component);
-//                    ActionBarPacket actionBarPacket = new ActionBarPacket(message, 200);
-//                    PacketDistributor.sendToPlayer(player, actionBarPacket);
-                }
                 Sinew.LOGGER.info("Nether progression has been enabled");
+                for (ServerPlayer player : serverPlayer.getServer().getPlayerList().getPlayers()) {
+                    player.playNotifySound(SinewSoundEvents.ENTER_NETHER.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
+                    MutableComponent message = Component.translatable("sinew.nether_progression.enabled").withStyle(ChatFormatting.RED);
+                    player.sendSystemMessage(message);
+                }
             }
         }
     }

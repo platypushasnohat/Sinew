@@ -22,11 +22,9 @@ public class SinewWorldData extends SavedData {
         if (level instanceof ServerLevel) {
             ServerLevel overworld = level.getServer().getLevel(Level.OVERWORLD);
             DimensionDataStorage storage = overworld.getDataStorage();
-            SinewWorldData data = storage.computeIfAbsent(FACTORY, IDENTIFIER);
-            if (data != null) {
-                data.setDirty();
-            }
-            return data;
+            SinewWorldData worldData = storage.computeIfAbsent(FACTORY, IDENTIFIER);
+            worldData.setDirty();
+            return worldData;
         }
         return null;
     }
