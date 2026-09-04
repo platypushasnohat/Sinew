@@ -10,6 +10,9 @@ public class SinewEntityTags {
 
     public static final TagKey<EntityType<?>> SWEET_BERRY_BUSH_IMMUNE = modEntityTag("sweet_berry_bush_immune");
 
+    public static final TagKey<EntityType<?>> POST_NETHER_SPAWNS = modEntityTag("post_nether_spawns");
+    public static final TagKey<EntityType<?>> POST_END_SPAWNS = modEntityTag("post_end_spawns");
+
     private static TagKey<EntityType<?>> modEntityTag(String name) {
         return entityTag(Sinew.MOD_ID, name);
     }
