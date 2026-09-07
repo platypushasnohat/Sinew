@@ -1,4 +1,4 @@
-package com.platypushasnohat.sinew.entity.animation;
+package com.platypushasnohat.sinew.entity.utils;
 
 public interface BodyChainMob {
 

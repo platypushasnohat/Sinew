@@ -1,7 +1,7 @@
 package com.platypushasnohat.sinew.client.model.entity;
 
-import com.platypushasnohat.sinew.entity.animation.BodyChainMob;
-import com.platypushasnohat.sinew.entity.animation.SmoothAnimationState;
+import com.platypushasnohat.sinew.client.animation.SmoothAnimationState;
+import com.platypushasnohat.sinew.entity.utils.BodyChainMob;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.KeyframeAnimations;
 import net.minecraft.client.model.HierarchicalModel;

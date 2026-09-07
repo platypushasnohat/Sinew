@@ -4,11 +4,14 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "sinew.refmap.json",
   "mixins": [
+    "EndDragonFightMixin",
     "ShearsItemMixin",
     "SweetBerryBushBlockMixin"
   ],
   "client": [
-    "client.GuiAccessor"
+    "client.GuiAccessor",
+    "client.SoundEngineAccessor",
+    "client.SoundManagerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

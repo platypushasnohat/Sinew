@@ -1,7 +1,7 @@
 package com.platypushasnohat.sinew.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.platypushasnohat.sinew.entity.animation.BodyChainMob;
+import com.platypushasnohat.sinew.entity.utils.BodyChainMob;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;

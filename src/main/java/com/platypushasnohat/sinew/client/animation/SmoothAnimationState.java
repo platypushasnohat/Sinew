@@ -1,4 +1,4 @@
-package com.platypushasnohat.sinew.entity.animation;
+package com.platypushasnohat.sinew.client.animation;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AnimationState;
