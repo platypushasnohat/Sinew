@@ -10,6 +10,7 @@
   ],
   "client": [
     "client.GuiAccessor",
+    "client.HumanoidModelMixin",
     "client.SoundEngineAccessor",
     "client.SoundManagerAccessor"
   ],
