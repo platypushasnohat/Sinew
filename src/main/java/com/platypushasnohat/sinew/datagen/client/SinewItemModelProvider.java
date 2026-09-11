@@ -51,7 +51,7 @@ public abstract class SinewItemModelProvider extends ItemModelProvider {
     }
 
     public static ResourceLocation itemTexture(ItemLike item) {
-        ResourceLocation name = key(item);
-        return ResourceLocation.fromNamespaceAndPath(name.getNamespace(), ModelProvider.ITEM_FOLDER + "/" + name.getPath());
+        ResourceLocation location = key(item);
+        return ResourceLocation.fromNamespaceAndPath(location.getNamespace(), ModelProvider.ITEM_FOLDER + "/" + location.getPath());
     }
 }
