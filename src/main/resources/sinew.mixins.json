@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "sinew.refmap.json",
   "mixins": [
+    "BrushItemMixin",
     "EndDragonFightMixin",
     "LandRandomPosMixin",
     "ShearsItemMixin",
