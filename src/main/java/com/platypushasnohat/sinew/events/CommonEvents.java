@@ -2,6 +2,7 @@ package com.platypushasnohat.sinew.events;
 
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.config.SinewConfig;
+import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewSoundEvents;
 import com.platypushasnohat.sinew.tags.SinewEntityTags;
 import com.platypushasnohat.sinew.world.SinewWorldData;
@@ -11,6 +12,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
@@ -18,11 +21,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 @EventBusSubscriber(modid = Sinew.MOD_ID)
 public class CommonEvents {
+
+    @SubscribeEvent
+    public static void onEntityModifyAttributes(EntityAttributeModificationEvent event) {
+        event.getTypes().forEach(entityType -> {
+            event.add(entityType, SinewAttributes.RANGED_DAMAGE);
+        });
+    }
 
     @SubscribeEvent
     public static void onFinalizeSpawn(FinalizeSpawnEvent event) {
@@ -65,6 +77,20 @@ public class CommonEvents {
                         MutableComponent message = Component.translatable("sinew.nether_progression.enabled").withStyle(ChatFormatting.RED);
                         player.sendSystemMessage(message);
                     }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamagePre(LivingDamageEvent.Pre event) {
+        DamageSource source = event.getSource();
+        if (source.getEntity() instanceof LivingEntity attacker) {
+            if (source.is(DamageTypeTags.IS_PROJECTILE) && attacker.getAttribute(SinewAttributes.RANGED_DAMAGE) != null) {
+                float rangedDamage = (float) attacker.getAttributeValue(SinewAttributes.RANGED_DAMAGE);
+                event.setNewDamage(event.getOriginalDamage() + rangedDamage);
+                if (event.getNewDamage() < 0.0F) {
+                    event.setNewDamage(0.0F);
                 }
             }
         }

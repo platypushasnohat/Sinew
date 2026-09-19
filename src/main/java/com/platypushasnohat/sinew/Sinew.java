@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.network.ActionBarPacket;
 import com.platypushasnohat.sinew.network.ParticlePacket;
+import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewSoundEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -29,6 +30,7 @@ public class Sinew {
     }
 
     public Sinew(IEventBus modEventBus, ModContainer modContainer) {
+        SinewAttributes.ATTRIBUTES.register(modEventBus);
         SinewSoundEvents.SOUND_EVENTS.register(modEventBus);
         modEventBus.addListener(this::packetSetup);
         modContainer.registerConfig(ModConfig.Type.COMMON, SinewConfig.COMMON_CONFIG, "sinew-common.toml");

@@ -1,4 +1,5 @@
 {
   "sinew.nether_progression.enabled": "Forgotten creatures have returned to the world…",
-  "sinew.end_progression.enabled": "Ancient creatures have been unleashed upon the world…"
+  "sinew.end_progression.enabled": "Ancient creatures have been unleashed upon the world…",
+  "attribute.sinew.name.generic.ranged_damage": "Ranged Damage"
 }
