@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.control.BodyRotationControl;
 
 public class UnrestrictedBodyRotationControl extends BodyRotationControl {
 
-    protected final Mob mob;
+    public final Mob mob;
 
     public UnrestrictedBodyRotationControl(Mob mob) {
         super(mob);
@@ -24,15 +24,15 @@ public class UnrestrictedBodyRotationControl extends BodyRotationControl {
         }
     }
 
-    protected void rotateHeadIfNecessary() {
+    public void rotateHeadIfNecessary() {
         this.mob.yHeadRot = Mth.rotateIfNecessary(this.mob.yHeadRot, this.mob.yBodyRot, (float)this.mob.getMaxHeadYRot());
     }
 
-    protected boolean notCarryingMobPassengers() {
+    public boolean notCarryingMobPassengers() {
         return !(this.mob.getFirstPassenger() instanceof Mob);
     }
 
-    protected boolean isMoving() {
+    public boolean isMoving() {
         double d0 = this.mob.getX() - this.mob.xo;
         double d1 = this.mob.getZ() - this.mob.zo;
         return d0 * d0 + d1 * d1 > (double) 2.5000003E-7F;

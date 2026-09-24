@@ -3,10 +3,13 @@ package com.platypushasnohat.sinew;
 import com.mojang.logging.LogUtils;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.network.ActionBarPacket;
+import com.platypushasnohat.sinew.network.MountedEntityKeyPacket;
 import com.platypushasnohat.sinew.network.MultipartEntityPacket;
 import com.platypushasnohat.sinew.network.ParticlePacket;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewSoundEvents;
+import com.platypushasnohat.sinew.utils.SinewClientProxy;
+import com.platypushasnohat.sinew.utils.SinewCommonProxy;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -26,6 +29,8 @@ public class Sinew {
     public static final String MOD_ID = "sinew";
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    public static final SinewCommonProxy PROXY = Sinew.unsafeRunForDist(() -> SinewClientProxy::new, () -> SinewCommonProxy::new);
+
     public static ResourceLocation location(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path.toLowerCase(Locale.ROOT));
     }
@@ -41,7 +46,9 @@ public class Sinew {
         PayloadRegistrar registrar = event.registrar(MOD_ID).versioned("1.0.0").optional();
         registrar.playToClient(ParticlePacket.TYPE, ParticlePacket.CODEC, ParticlePacket::handle);
         registrar.playToClient(ActionBarPacket.TYPE, ActionBarPacket.CODEC, ActionBarPacket::handle);
+
         registrar.playToServer(MultipartEntityPacket.TYPE, MultipartEntityPacket.CODEC, MultipartEntityPacket::handle);
+        registrar.playToServer(MountedEntityKeyPacket.TYPE, MountedEntityKeyPacket.CODEC, MountedEntityKeyPacket::handle);
     }
 
     public static <T> T unsafeRunForDist(Supplier<Supplier<T>> clientTarget, Supplier<Supplier<T>> serverTarget) {

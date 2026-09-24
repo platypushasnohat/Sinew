@@ -9,10 +9,11 @@ import net.neoforged.neoforge.common.util.TriState;
 public class PlayerPoseEvent extends Event implements ICancellableEvent {
 
     private final LivingEntity entity;
-    private final HumanoidModel<LivingEntity> humanoidModel;
-    private TriState result = TriState.DEFAULT;
+    private final HumanoidModel<?> humanoidModel;
+    private TriState result;
 
-    public PlayerPoseEvent(LivingEntity entity, HumanoidModel<LivingEntity> humanoidModel) {
+    public PlayerPoseEvent(LivingEntity entity, HumanoidModel<?> humanoidModel) {
+        this.result = TriState.DEFAULT;
         this.entity = entity;
         this.humanoidModel = humanoidModel;
     }
@@ -21,7 +22,7 @@ public class PlayerPoseEvent extends Event implements ICancellableEvent {
         return this.entity;
     }
 
-    public HumanoidModel<LivingEntity> getHumanoidModel() {
+    public HumanoidModel<?> getHumanoidModel() {
         return this.humanoidModel;
     }
 

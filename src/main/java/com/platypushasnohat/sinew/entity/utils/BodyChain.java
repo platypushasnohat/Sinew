@@ -4,23 +4,30 @@ import net.minecraft.util.Mth;
 
 public class BodyChain {
 
-    private final float[] yawGains;
-    private final float[] pitchGains;
+    public final float renderYawEase;
+    public final float[] yawGains;
+    public final float[] pitchGains;
+    public final float rollPerYaw;
+    public final float maxRoll;
+    public final float rollEase;
 
-    private final float[] prevSegmentYaw;
-    private final float[] segmentYaw;
+    public final float[] prevSegmentYaw;
+    public final float[] segmentYaw;
+    public final float[] prevSegmentPitch;
+    public final float[] segmentPitch;
+    public float prevRenderYaw;
+    public float renderYaw;
+    public float prevRoll;
+    public float roll;
+    public boolean initialized;
 
-    private final float[] prevSegmentPitch;
-    private final float[] segmentPitch;
-
-    private float prevRenderYaw;
-    private float renderYaw;
-
-    private boolean initialized;
-
-    public BodyChain(float[] yawGains, float[] pitchGains) {
+    public BodyChain(float renderYawEase, float rollPerYaw, float maxRoll, float rollEase, float[] yawGains, float[] pitchGains) {
+        this.renderYawEase = renderYawEase;
         this.yawGains = yawGains;
         this.pitchGains = pitchGains;
+        this.rollPerYaw = rollPerYaw;
+        this.maxRoll = maxRoll;
+        this.rollEase = rollEase;
         this.segmentYaw = new float[yawGains.length];
         this.prevSegmentYaw = new float[yawGains.length];
         this.segmentPitch = new float[pitchGains.length];
@@ -36,31 +43,43 @@ public class BodyChain {
             }
         }
         this.prevRenderYaw = this.renderYaw;
+        this.prevRoll = this.roll;
         System.arraycopy(this.segmentYaw, 0, this.prevSegmentYaw, 0, this.segmentYaw.length);
         System.arraycopy(this.segmentPitch, 0, this.prevSegmentPitch, 0, this.segmentPitch.length);
 
-        this.renderYaw += Mth.wrapDegrees(bodyYaw - this.renderYaw) * 0.2F;
+        this.renderYaw += Mth.wrapDegrees(bodyYaw - this.renderYaw) * this.renderYawEase;
         for (int i = 0; i < this.segmentYaw.length; i++) {
             float yawReference = i == 0 ? bodyYaw : i == 1 ? this.renderYaw : this.segmentYaw[i - 1];
             this.segmentYaw[i] += Mth.wrapDegrees(yawReference - this.segmentYaw[i]) * this.yawGains[i];
             float pitchReference = i == 0 ? targetPitch : i == 1 ? bodyPitch : this.segmentPitch[i - 1];
             this.segmentPitch[i] += (pitchReference - this.segmentPitch[i]) * this.pitchGains[i];
         }
+
+        float rollTarget = Mth.clamp(-Mth.wrapDegrees(this.renderYaw - this.prevRenderYaw) * this.rollPerYaw, -this.maxRoll, this.maxRoll);
+        this.roll += (rollTarget - this.roll) * this.rollEase;
     }
 
-    public float getRenderYaw(float partialTicks) {
-        return Mth.rotLerp(partialTicks, this.prevRenderYaw, this.renderYaw);
+    public float getRenderYaw() {
+        return this.renderYaw;
     }
 
-    public float getSegmentYawOffset(int index, float partialTicks) {
-        float current = Mth.rotLerp(partialTicks, this.prevSegmentYaw[index], this.segmentYaw[index]);
-        float reference = index <= 1 ? this.getRenderYaw(partialTicks) : Mth.rotLerp(partialTicks, this.prevSegmentYaw[index - 1], this.segmentYaw[index - 1]);
+    public float getRenderYaw(float partialTick) {
+        return Mth.rotLerp(partialTick, this.prevRenderYaw, this.renderYaw);
+    }
+
+    public float getRoll(float partialTick) {
+        return Mth.lerp(partialTick, this.prevRoll, this.roll);
+    }
+
+    public float getSegmentYawOffset(int index, float partialTick) {
+        float current = Mth.rotLerp(partialTick, this.prevSegmentYaw[index], this.segmentYaw[index]);
+        float reference = index <= 1 ? this.getRenderYaw(partialTick) : Mth.rotLerp(partialTick, this.prevSegmentYaw[index - 1], this.segmentYaw[index - 1]);
         return Mth.wrapDegrees(current - reference);
     }
 
-    public float getSegmentPitchOffset(int index, float partialTicks, float bodyPitch) {
-        float current = Mth.lerp(partialTicks, this.prevSegmentPitch[index], this.segmentPitch[index]);
-        float reference = index <= 1 ? bodyPitch : Mth.lerp(partialTicks, this.prevSegmentPitch[index - 1], this.segmentPitch[index - 1]);
+    public float getSegmentPitchOffset(int index, float partialTick, float bodyPitch) {
+        float current = Mth.lerp(partialTick, this.prevSegmentPitch[index], this.segmentPitch[index]);
+        float reference = index <= 1 ? bodyPitch : Mth.lerp(partialTick, this.prevSegmentPitch[index - 1], this.segmentPitch[index - 1]);
         return current - reference;
     }
 }

@@ -2,7 +2,11 @@ package com.platypushasnohat.sinew.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+
+import java.util.function.Function;
 
 public abstract class AgeableSinewEntityModel<E extends Entity> extends SinewEntityModel<E> {
 
@@ -10,7 +14,11 @@ public abstract class AgeableSinewEntityModel<E extends Entity> extends SinewEnt
     private final float bodyYOffset;
 
     public AgeableSinewEntityModel(float youngScaleFactor, float bodyYOffset) {
-        super();
+        this(RenderType::entityCutoutNoCull, youngScaleFactor, bodyYOffset);
+    }
+
+    public AgeableSinewEntityModel(Function<ResourceLocation, RenderType> renderType, float youngScaleFactor, float bodyYOffset) {
+        super(renderType);
         this.bodyYOffset = bodyYOffset;
         this.youngScaleFactor = youngScaleFactor;
     }
