@@ -33,6 +33,7 @@ public class CommonEvents {
     public static void onEntityModifyAttributes(EntityAttributeModificationEvent event) {
         event.getTypes().forEach(entityType -> {
             event.add(entityType, SinewAttributes.RANGED_DAMAGE);
+            event.add(entityType, SinewAttributes.AIR_SPEED);
         });
     }
 
