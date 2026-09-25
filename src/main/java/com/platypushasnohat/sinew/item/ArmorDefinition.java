@@ -19,9 +19,6 @@ public class ArmorDefinition {
     private final Function<EquipmentSlot, ResourceLocation> textureFunction;
     private final boolean walkOnPowderedSnow;
 
-    public record AttributeEntry(Holder<Attribute> attribute, double value, AttributeModifier.Operation operation) {
-    }
-
     private ArmorDefinition(Holder<ArmorMaterial> material, List<AttributeEntry> attributes, Function<EquipmentSlot, ResourceLocation> textureFunction, boolean walkOnPowderedSnow) {
         this.material = material;
         this.attributes = attributes;

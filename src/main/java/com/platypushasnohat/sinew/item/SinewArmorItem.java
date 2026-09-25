@@ -27,8 +27,8 @@ public class SinewArmorItem extends ArmorItem {
         ItemAttributeModifiers modifiers = super.getDefaultAttributeModifiers(stack);
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         List<ItemAttributeModifiers.Entry> entries = modifiers.modifiers();
-        ResourceLocation location = ResourceLocation.withDefaultNamespace("armor." + this.type.getName());
         EquipmentSlotGroup slot = EquipmentSlotGroup.bySlot(this.type.getSlot());
+        ResourceLocation location = ResourceLocation.withDefaultNamespace("armor." + this.type.getName());
 
         for (ItemAttributeModifiers.Entry entry : entries) {
             builder.add(entry.attribute(), entry.modifier(), slot);

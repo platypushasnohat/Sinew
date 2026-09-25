@@ -13,9 +13,6 @@ public class ToolDefinition {
     private final Tier tier;
     private final List<AttributeEntry> attributes;
 
-    public record AttributeEntry(Holder<Attribute> attribute, double value, AttributeModifier.Operation operation) {
-    }
-
     private ToolDefinition(Tier tier, List<AttributeEntry> attributes) {
         this.tier = tier;
         this.attributes = attributes;
