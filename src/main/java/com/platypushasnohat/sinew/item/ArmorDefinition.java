@@ -3,7 +3,6 @@ package com.platypushasnohat.sinew.item;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ArmorMaterial;
@@ -20,7 +19,7 @@ public class ArmorDefinition {
     private final Function<EquipmentSlot, ResourceLocation> textureFunction;
     private final boolean walkOnPowderedSnow;
 
-    public record AttributeEntry(Holder<Attribute> attribute, double value, AttributeModifier.Operation operation, EquipmentSlotGroup slot) {
+    public record AttributeEntry(Holder<Attribute> attribute, double value, AttributeModifier.Operation operation) {
     }
 
     private ArmorDefinition(Holder<ArmorMaterial> material, List<AttributeEntry> attributes, Function<EquipmentSlot, ResourceLocation> textureFunction, boolean walkOnPowderedSnow) {
@@ -58,8 +57,8 @@ public class ArmorDefinition {
             return this;
         }
 
-        public Builder attribute(Holder<Attribute> attribute, double value, AttributeModifier.Operation operation, EquipmentSlotGroup slot) {
-            this.attributes.add(new AttributeEntry(attribute, value, operation, slot));
+        public Builder attribute(Holder<Attribute> attribute, double value, AttributeModifier.Operation operation) {
+            this.attributes.add(new AttributeEntry(attribute, value, operation));
             return this;
         }
 

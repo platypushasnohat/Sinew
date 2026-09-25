@@ -3,6 +3,7 @@
   "sinew.end_progression.enabled": "Ancient creatures have been unleashed upon the world…",
   "attribute.sinew.name.generic.ranged_damage": "Ranged Damage",
   "attribute.sinew.name.generic.air_speed": "Air Speed",
+  "attribute.sinew.name.generic.experience_boost": "Experience Boost",
   "entity.sinew.all.command_0": "%s is staying",
   "entity.sinew.all.command_1": "%s is following",
   "entity.sinew.all.command_2": "%s is wandering"

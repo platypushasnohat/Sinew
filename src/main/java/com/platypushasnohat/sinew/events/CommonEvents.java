@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -25,6 +26,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 
 @EventBusSubscriber(modid = Sinew.MOD_ID)
 public class CommonEvents {
@@ -34,6 +36,7 @@ public class CommonEvents {
         event.getTypes().forEach(entityType -> {
             event.add(entityType, SinewAttributes.RANGED_DAMAGE);
             event.add(entityType, SinewAttributes.AIR_SPEED);
+            event.add(entityType, SinewAttributes.EXPERIENCE_BOOST);
         });
     }
 
@@ -95,5 +98,17 @@ public class CommonEvents {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onXpChange(PlayerXpEvent.XpChange event) {
+        Player player = event.getEntity();
+        double experienceBoost = event.getAmount() * player.getAttributeValue(SinewAttributes.EXPERIENCE_BOOST);
+        int base = Mth.floor(experienceBoost);
+        double bonus = Mth.frac(experienceBoost);
+        if (bonus != 0.0F && Math.random() < bonus) {
+            base++;
+        }
+        event.setAmount(event.getAmount() + base);
     }
 }
