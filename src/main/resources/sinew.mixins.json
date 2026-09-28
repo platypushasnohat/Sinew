@@ -5,7 +5,6 @@
   "refmap": "sinew.refmap.json",
   "mixins": [
     "BrushItemMixin",
-    "EndDragonFightMixin",
     "LandRandomPosMixin",
     "PlayerMixin",
     "ShearsItemMixin",

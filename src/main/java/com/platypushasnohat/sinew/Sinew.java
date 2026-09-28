@@ -7,7 +7,6 @@ import com.platypushasnohat.sinew.network.MountedEntityKeyPacket;
 import com.platypushasnohat.sinew.network.MultipartEntityPacket;
 import com.platypushasnohat.sinew.network.ParticlePacket;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
-import com.platypushasnohat.sinew.registry.SinewSoundEvents;
 import com.platypushasnohat.sinew.utils.SinewClientProxy;
 import com.platypushasnohat.sinew.utils.SinewCommonProxy;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +36,6 @@ public class Sinew {
 
     public Sinew(IEventBus modEventBus, ModContainer modContainer) {
         SinewAttributes.ATTRIBUTES.register(modEventBus);
-        SinewSoundEvents.SOUND_EVENTS.register(modEventBus);
         modEventBus.addListener(this::packetSetup);
         modContainer.registerConfig(ModConfig.Type.COMMON, SinewConfig.COMMON_CONFIG, "sinew-common.toml");
     }

@@ -3,15 +3,10 @@ package com.platypushasnohat.sinew.events;
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
-import com.platypushasnohat.sinew.registry.SinewSoundEvents;
 import com.platypushasnohat.sinew.tags.SinewEntityTags;
 import com.platypushasnohat.sinew.world.SinewWorldData;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -73,15 +68,8 @@ public class CommonEvents {
                 return;
             }
             if (!worldData.hasNetherBeenEnteredBefore()) {
+                Sinew.LOGGER.info("Nether progression has been enabled");
                 worldData.setHasNetherBeenEnteredBefore(true);
-                if (SinewConfig.SEND_PROGRESSION_MESSAGE.get()) {
-                    Sinew.LOGGER.info("Nether progression has been enabled");
-                    for (ServerPlayer player : serverPlayer.getServer().getPlayerList().getPlayers()) {
-                        player.playNotifySound(SinewSoundEvents.ENTER_NETHER.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
-                        MutableComponent message = Component.translatable("sinew.nether_progression.enabled").withStyle(ChatFormatting.RED);
-                        player.sendSystemMessage(message);
-                    }
-                }
             }
         }
     }
