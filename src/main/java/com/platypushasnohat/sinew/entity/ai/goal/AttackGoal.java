@@ -95,11 +95,15 @@ public class AttackGoal extends Goal {
     }
 
     public boolean isInAttackBox(LivingEntity target, double lookScale, double width, double height) {
-        return this.isInAttackBox(target, lookScale, width, height, false);
+        return this.isInAttackBox(target, lookScale, width, height, false, false);
     }
 
-    public boolean isInAttackBox(LivingEntity target, double lookScale, double width, double height, boolean debug) {
-        AABB attackBox = this.mob.getBoundingBox().move(this.mob.getLookAngle().normalize().multiply(lookScale, 0.0D, lookScale)).inflate(width, height, width);
+    public boolean isInAttackBox(LivingEntity target, double lookScale, double width, double height, boolean scaleLookY) {
+        return this.isInAttackBox(target, lookScale, width, height, scaleLookY, false);
+    }
+
+    public boolean isInAttackBox(LivingEntity target, double lookScale, double width, double height, boolean scaleLookY, boolean debug) {
+        AABB attackBox = this.mob.getBoundingBox().move(this.mob.getLookAngle().normalize().multiply(lookScale, scaleLookY ? lookScale : 0.0D, lookScale)).inflate(width, height, width);
         List<LivingEntity> nearbyEntities = this.mob.level().getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat(), this.mob, attackBox);
         if (debug && !target.level().isClientSide && target.level() instanceof ServerLevel serverLevel) {
             SinewMiscUtils.outlineBounds(attackBox, serverLevel, ParticleTypes.END_ROD);
