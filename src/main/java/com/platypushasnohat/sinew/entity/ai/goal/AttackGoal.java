@@ -1,13 +1,19 @@
 package com.platypushasnohat.sinew.entity.ai.goal;
 
 import com.platypushasnohat.sinew.entity.utils.AnimatedEntity;
+import com.platypushasnohat.sinew.utils.SinewMiscUtils;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 
 import java.util.EnumSet;
+import java.util.List;
 
 public class AttackGoal extends Goal {
 
@@ -72,7 +78,7 @@ public class AttackGoal extends Goal {
     }
 
     public double getAttackReachSqr(LivingEntity target) {
-        return this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + target.getBbWidth();
+        return this.getAttackReachSqr(target, 2.0D);
     }
 
     public double getAttackReachSqr(LivingEntity target, double distance) {
@@ -86,5 +92,18 @@ public class AttackGoal extends Goal {
     public void lookAtTarget(LivingEntity target, float yaw, float pitch) {
         this.mob.getLookControl().setLookAt(target, yaw, pitch);
         this.mob.lookAt(target, yaw, pitch);
+    }
+
+    public boolean isInAttackBox(LivingEntity target, double lookScale, double width, double height) {
+        return this.isInAttackBox(target, lookScale, width, height, false);
+    }
+
+    public boolean isInAttackBox(LivingEntity target, double lookScale, double width, double height, boolean debug) {
+        AABB attackBox = this.mob.getBoundingBox().move(this.mob.getLookAngle().normalize().multiply(lookScale, 0.0D, lookScale)).inflate(width, height, width);
+        List<LivingEntity> nearbyEntities = this.mob.level().getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat(), this.mob, attackBox);
+        if (debug && !target.level().isClientSide && target.level() instanceof ServerLevel serverLevel) {
+            SinewMiscUtils.outlineBounds(attackBox, serverLevel, ParticleTypes.END_ROD);
+        }
+        return this.mob.hasLineOfSight(target) && !nearbyEntities.isEmpty() && nearbyEntities.contains(target);
     }
 }
