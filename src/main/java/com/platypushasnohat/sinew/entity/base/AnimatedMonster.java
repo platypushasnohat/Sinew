@@ -63,8 +63,27 @@ public abstract class AnimatedMonster extends Monster implements AnimatedEntity 
         return level.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawnNoSkylight(level, pos, random) && checkMobSpawnRules(monster, level, reason, pos, random);
     }
 
+    public static boolean checkSurfaceMonsterSpawnRules(EntityType<? extends Mob> monster, ServerLevelAccessor level, MobSpawnType reason, BlockPos pos, RandomSource random) {
+        return level.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawnRequireSkylight(level, pos, random) && checkMobSpawnRules(monster, level, reason, pos, random);
+    }
+
     public static boolean isDarkEnoughToSpawnNoSkylight(ServerLevelAccessor level, BlockPos pos, RandomSource random) {
         if (level.getBrightness(LightLayer.SKY, pos) > 0) {
+            return false;
+        } else {
+            DimensionType dimension = level.dimensionType();
+            int i = dimension.monsterSpawnBlockLightLimit();
+            if (i < 15 && level.getBrightness(LightLayer.BLOCK, pos) > i) {
+                return false;
+            } else {
+                int j = level.getLevel().isThundering() ? level.getMaxLocalRawBrightness(pos, 10) : level.getMaxLocalRawBrightness(pos);
+                return j <= dimension.monsterSpawnLightTest().sample(random);
+            }
+        }
+    }
+
+    public static boolean isDarkEnoughToSpawnRequireSkylight(ServerLevelAccessor level, BlockPos pos, RandomSource random) {
+        if (level.getBrightness(LightLayer.SKY, pos) <= 0) {
             return false;
         } else {
             DimensionType dimension = level.dimensionType();
