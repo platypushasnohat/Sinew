@@ -19,9 +19,9 @@ import net.neoforged.neoforge.event.EventHooks;
 
 public abstract class AnimatedTamableAnimal extends TamableAnimal implements AnimatedEntity {
 
-    private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> TAME_ATTEMPTS = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> TAME_ATTEMPTS = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
 
     public static final int COMMAND_SIT = 0;
     public static final int COMMAND_FOLLOW = 1;

@@ -21,7 +21,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 
 public abstract class AnimatedMonster extends Monster implements AnimatedEntity {
 
-    private static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(AnimatedMonster.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> ANIMATION_STATE = SynchedEntityData.defineId(AnimatedMonster.class, EntityDataSerializers.INT);
 
     public final SmoothAnimationState idleAnimationState = new SmoothAnimationState();
     public final SmoothAnimationState walkAnimationState = new SmoothAnimationState();
