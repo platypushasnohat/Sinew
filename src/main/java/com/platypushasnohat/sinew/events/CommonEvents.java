@@ -2,9 +2,11 @@ package com.platypushasnohat.sinew.events;
 
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.config.SinewConfig;
+import com.platypushasnohat.sinew.entity.base.TamableMonster;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.tags.SinewEntityTags;
 import com.platypushasnohat.sinew.world.SinewWorldData;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -13,12 +15,17 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
+
+import java.util.List;
 
 @EventBusSubscriber(modid = Sinew.MOD_ID)
 public class CommonEvents {
@@ -95,5 +102,19 @@ public class CommonEvents {
             base++;
         }
         event.setAmount(event.getAmount() + base);
+    }
+
+    @SubscribeEvent
+    public static void onCanPlayerSleep(CanPlayerSleepEvent event) {
+        ServerPlayer player = event.getEntity();
+        Level level = event.getLevel();
+        BlockPos pos = event.getPos();
+        if (!player.isCreative()) {
+            Vec3 vec3 = Vec3.atBottomCenterOf(pos);
+            List<TamableMonster> list = level.getEntitiesOfClass(TamableMonster.class, new AABB(vec3.x - 8.0D, vec3.y - 5.0D, vec3.z - 8.0D, vec3.x + 8.0D, vec3.y + 5.0D, vec3.z + 8.0D), monster -> monster.isPreventingPlayerRest(player));
+            if (!list.isEmpty()) {
+                event.setProblem(Player.BedSleepingProblem.NOT_SAFE);
+            }
+        }
     }
 }
