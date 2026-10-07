@@ -109,9 +109,9 @@ public class CommonEvents {
         ServerPlayer player = event.getEntity();
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
-        if (!player.isCreative()) {
-            Vec3 vec3 = Vec3.atBottomCenterOf(pos);
-            List<TamableMonster> list = level.getEntitiesOfClass(TamableMonster.class, new AABB(vec3.x - 8.0D, vec3.y - 5.0D, vec3.z - 8.0D, vec3.x + 8.0D, vec3.y + 5.0D, vec3.z + 8.0D), monster -> monster.isPreventingPlayerRest(player));
+        if (!level.isDay() && !player.isCreative()) {
+            Vec3 center = Vec3.atBottomCenterOf(pos);
+            List<TamableMonster> list = level.getEntitiesOfClass(TamableMonster.class, new AABB(center.x - 8.0D, center.y - 5.0D, center.z - 8.0D, center.x + 8.0D, center.y + 5.0D, center.z + 8.0D), monster -> monster.isPreventingPlayerRest(player));
             if (!list.isEmpty()) {
                 event.setProblem(Player.BedSleepingProblem.NOT_SAFE);
             }

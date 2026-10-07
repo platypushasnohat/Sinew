@@ -77,7 +77,7 @@ public abstract class TamableMonster extends AnimatedTamableAnimal implements En
     }
 
     public boolean isPreventingPlayerRest(Player player) {
-        return true;
+        return !this.isTame();
     }
 
     @Override
