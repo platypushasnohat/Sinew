@@ -1,5 +1,5 @@
 {
-  "attribute.sinew.name.generic.ranged_damage": "Ranged Damage",
+  "attribute.sinew.name.generic.projectile_damage": "Projectile Damage",
   "attribute.sinew.name.generic.air_speed": "Air Speed",
   "attribute.sinew.name.generic.experience_boost": "Experience Boost",
   "entity.sinew.all.command_0": "%s is staying",

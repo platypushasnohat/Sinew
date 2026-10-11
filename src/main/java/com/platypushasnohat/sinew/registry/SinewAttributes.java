@@ -12,7 +12,7 @@ public class SinewAttributes {
 
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, Sinew.MOD_ID);
 
-    public static final DeferredHolder<Attribute, Attribute> RANGED_DAMAGE = register("ranged_damage", 0.0D, -2048.0D, 2048.0D);
+    public static final DeferredHolder<Attribute, Attribute> PROJECTILE_DAMAGE = register("projectile_damage", 0.0D, -2048.0D, 2048.0D);
     public static final DeferredHolder<Attribute, Attribute> AIR_SPEED = registerPercentage("air_speed", 0.0D, -30.0D, 30.0D);
     public static final DeferredHolder<Attribute, Attribute> EXPERIENCE_BOOST = registerPercentage("experience_boost", 0.0D, -30.0D, 30.0D);
 

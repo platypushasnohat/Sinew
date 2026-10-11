@@ -38,7 +38,7 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onEntityModifyAttributes(EntityAttributeModificationEvent event) {
         event.getTypes().forEach(entityType -> {
-            event.add(entityType, SinewAttributes.RANGED_DAMAGE);
+            event.add(entityType, SinewAttributes.PROJECTILE_DAMAGE);
             event.add(entityType, SinewAttributes.AIR_SPEED);
             event.add(entityType, SinewAttributes.EXPERIENCE_BOOST);
         });
@@ -90,8 +90,8 @@ public class CommonEvents {
         DamageSource source = event.getSource();
 
         if (source.getEntity() instanceof LivingEntity attacker) {
-            if (source.is(DamageTypeTags.IS_PROJECTILE) && !source.is(SinewDamageTypeTags.IS_LAYERED) && attacker.getAttribute(SinewAttributes.RANGED_DAMAGE) != null) {
-                float rangedDamage = (float) attacker.getAttributeValue(SinewAttributes.RANGED_DAMAGE);
+            if (source.is(DamageTypeTags.IS_PROJECTILE) && !source.is(SinewDamageTypeTags.IS_LAYERED) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
+                float rangedDamage = (float) attacker.getAttributeValue(SinewAttributes.PROJECTILE_DAMAGE);
                 if (rangedDamage > 0.0F) {
                     target.invulnerableTime = 0;
                     target.hurt(SinewDamageTypes.causeRangedDamage(level.registryAccess(), attacker, source), rangedDamage);
