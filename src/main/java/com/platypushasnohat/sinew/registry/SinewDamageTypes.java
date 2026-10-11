@@ -13,7 +13,7 @@ public class SinewDamageTypes {
 
     public static final ResourceKey<DamageType> PROJECTILE_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, Sinew.location("projectile"));
 
-    public static DamageSource causeRangedDamage(RegistryAccess registryAccess, Entity source, DamageSource original) {
+    public static DamageSource causeProjectileDamage(RegistryAccess registryAccess, Entity source, DamageSource original) {
         return new LayeredDamageSource(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(PROJECTILE_DAMAGE), source, original);
     }
 }

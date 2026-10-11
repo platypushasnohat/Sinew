@@ -91,10 +91,10 @@ public class CommonEvents {
 
         if (source.getEntity() instanceof LivingEntity attacker) {
             if (source.is(DamageTypeTags.IS_PROJECTILE) && !source.is(SinewDamageTypeTags.IS_LAYERED) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
-                float rangedDamage = (float) attacker.getAttributeValue(SinewAttributes.PROJECTILE_DAMAGE);
-                if (rangedDamage > 0.0F) {
+                float projectileDamage = (float) attacker.getAttributeValue(SinewAttributes.PROJECTILE_DAMAGE);
+                if (projectileDamage > 0.0F) {
                     target.invulnerableTime = 0;
-                    target.hurt(SinewDamageTypes.causeRangedDamage(level.registryAccess(), attacker, source), rangedDamage);
+                    target.hurt(SinewDamageTypes.causeProjectileDamage(level.registryAccess(), attacker, source), projectileDamage);
                 }
             }
         }
