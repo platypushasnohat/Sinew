@@ -43,7 +43,7 @@ public abstract class AnimatedTamableAnimal extends TamableAnimal implements Ani
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ANIMATION_STATE, 0);
-        builder.define(COMMAND, -1);
+        builder.define(COMMAND, 100);
         builder.define(TAME_ATTEMPTS, 0);
     }
 
