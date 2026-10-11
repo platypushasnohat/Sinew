@@ -2,7 +2,8 @@
   "attribute.sinew.name.generic.projectile_damage": "Projectile Damage",
   "attribute.sinew.name.generic.air_speed": "Air Speed",
   "attribute.sinew.name.generic.experience_boost": "Experience Boost",
-  "entity.sinew.all.command_0": "%s is staying",
-  "entity.sinew.all.command_1": "%s is following",
-  "entity.sinew.all.command_2": "%s is wandering"
+  "entity.sinew.all.command_0": "Invalid Command",
+  "entity.sinew.all.command_1": "%s is staying",
+  "entity.sinew.all.command_2": "%s is following",
+  "entity.sinew.all.command_3": "%s is wandering"
 }

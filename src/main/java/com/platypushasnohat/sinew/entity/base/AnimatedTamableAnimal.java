@@ -23,9 +23,9 @@ public abstract class AnimatedTamableAnimal extends TamableAnimal implements Ani
     protected static final EntityDataAccessor<Integer> COMMAND = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Integer> TAME_ATTEMPTS = SynchedEntityData.defineId(AnimatedTamableAnimal.class, EntityDataSerializers.INT);
 
-    public static final int COMMAND_SIT = 0;
-    public static final int COMMAND_FOLLOW = 1;
-    public static final int COMMAND_WANDER = 2;
+    public static final int COMMAND_SIT = 1;
+    public static final int COMMAND_FOLLOW = 2;
+    public static final int COMMAND_WANDER = 3;
 
     public final SmoothAnimationState idleAnimationState = new SmoothAnimationState();
     public final SmoothAnimationState walkAnimationState = new SmoothAnimationState();
@@ -43,7 +43,7 @@ public abstract class AnimatedTamableAnimal extends TamableAnimal implements Ani
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ANIMATION_STATE, 0);
-        builder.define(COMMAND, 100);
+        builder.define(COMMAND, 0);
         builder.define(TAME_ATTEMPTS, 0);
     }
 
