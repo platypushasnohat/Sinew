@@ -18,7 +18,7 @@ public class SinewBlockTags {
         return blockTag("c", name);
     }
 
-    public static TagKey<Block> blockTag(String modid, String name) {
-        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modid, name));
+    public static TagKey<Block> blockTag(String modId, String name) {
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(modId, name));
     }
 }

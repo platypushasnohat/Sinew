@@ -4,12 +4,16 @@ import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.entity.base.TamableMonster;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
+import com.platypushasnohat.sinew.registry.SinewDamageTypes;
+import com.platypushasnohat.sinew.tags.SinewDamageTypeTags;
 import com.platypushasnohat.sinew.tags.SinewEntityTags;
 import com.platypushasnohat.sinew.world.SinewWorldData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
@@ -21,6 +25,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
@@ -78,19 +83,22 @@ public class CommonEvents {
         }
     }
 
-//    @SubscribeEvent
-//    public static void onLivingDamagePre(LivingDamageEvent.Pre event) {
-//        DamageSource source = event.getSource();
-//        if (source.getEntity() instanceof LivingEntity attacker) {
-//            if (source.is(DamageTypeTags.IS_PROJECTILE) && attacker.getAttribute(SinewAttributes.RANGED_DAMAGE) != null) {
-//                float rangedDamage = (float) attacker.getAttributeValue(SinewAttributes.RANGED_DAMAGE);
-//                event.setNewDamage(event.getOriginalDamage() + rangedDamage);
-//                if (event.getNewDamage() < 0.0F) {
-//                    event.setNewDamage(0.0F);
-//                }
-//            }
-//        }
-//    }
+    @SubscribeEvent
+    public static void onLivingDamagePost(LivingDamageEvent.Post event) {
+        LivingEntity target = event.getEntity();
+        Level level = target.level();
+        DamageSource source = event.getSource();
+
+        if (source.getEntity() instanceof LivingEntity attacker) {
+            if (source.is(DamageTypeTags.IS_PROJECTILE) && !source.is(SinewDamageTypeTags.IS_LAYERED) && attacker.getAttribute(SinewAttributes.RANGED_DAMAGE) != null) {
+                float rangedDamage = (float) attacker.getAttributeValue(SinewAttributes.RANGED_DAMAGE);
+                if (rangedDamage > 0.0F) {
+                    target.invulnerableTime = 0;
+                    target.hurt(SinewDamageTypes.causeRangedDamage(level.registryAccess(), attacker, source), rangedDamage);
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onXpChange(PlayerXpEvent.XpChange event) {

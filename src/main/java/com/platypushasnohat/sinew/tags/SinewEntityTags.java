@@ -21,7 +21,7 @@ public class SinewEntityTags {
         return entityTag("c", name);
     }
 
-    public static TagKey<EntityType<?>> entityTag(String modid, String name) {
-        return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(modid, name));
+    public static TagKey<EntityType<?>> entityTag(String modId, String name) {
+        return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(modId, name));
     }
 }

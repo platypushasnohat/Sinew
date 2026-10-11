@@ -1,0 +1,24 @@
+package com.platypushasnohat.sinew.tags;
+
+import com.platypushasnohat.sinew.Sinew;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
+
+public class SinewDamageTypeTags {
+
+    public static final TagKey<DamageType> IS_LAYERED = modDamageTag("is_layered");
+
+    private static TagKey<DamageType> modDamageTag(String name) {
+        return damageTag(Sinew.MOD_ID, name);
+    }
+
+    private static TagKey<DamageType> commonDamageTag(String name) {
+        return damageTag("c", name);
+    }
+
+    public static TagKey<DamageType> damageTag(String modId, String name) {
+        return TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(modId, name));
+    }
+}

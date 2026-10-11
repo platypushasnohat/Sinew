@@ -6,9 +6,12 @@
   "mixins": [
     "BrushItemMixin",
     "LandRandomPosMixin",
+    "LivingEntityMixin",
     "PlayerMixin",
+    "ServerPlayerMixin",
     "ShearsItemMixin",
-    "SweetBerryBushBlockMixin"
+    "SweetBerryBushBlockMixin",
+    "TamableAnimalMixin"
   ],
   "client": [
     "client.GuiAccessor",
