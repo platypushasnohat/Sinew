@@ -41,6 +41,7 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.PROJECTILE_DAMAGE);
             event.add(entityType, SinewAttributes.AIR_SPEED);
             event.add(entityType, SinewAttributes.EXPERIENCE_BOOST);
+            event.add(entityType, SinewAttributes.MAGIC_DAMAGE);
         });
     }
 
@@ -89,12 +90,24 @@ public class CommonEvents {
         Level level = target.level();
         DamageSource source = event.getSource();
 
-        if (source.getEntity() instanceof LivingEntity attacker) {
-            if (source.is(DamageTypeTags.IS_PROJECTILE) && !source.is(SinewDamageTypeTags.IS_LAYERED) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
+        if (source.getEntity() instanceof LivingEntity attacker && !source.is(SinewDamageTypeTags.IS_LAYERED)) {
+            if (source.is(DamageTypeTags.IS_PROJECTILE) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
                 float projectileDamage = (float) attacker.getAttributeValue(SinewAttributes.PROJECTILE_DAMAGE);
                 if (projectileDamage > 0.0F) {
                     target.invulnerableTime = 0;
                     target.hurt(SinewDamageTypes.causeProjectileDamage(level.registryAccess(), attacker, source), projectileDamage);
+                }
+            }
+            if (source.is(SinewDamageTypeTags.TRIGGERS_MAGIC_DAMAGE) && attacker.getAttribute(SinewAttributes.MAGIC_DAMAGE) != null) {
+                float magicDamage = (float) attacker.getAttributeValue(SinewAttributes.MAGIC_DAMAGE);
+                if (attacker instanceof Player player) {
+                    if (!source.is(SinewDamageTypeTags.IGNORES_ATTACK_COOLDOWN_SCALING)) {
+                        magicDamage *= player.getAttackStrengthScale(0);
+                    }
+                }
+                if (magicDamage > 0.0F) {
+                    target.invulnerableTime = 0;
+                    target.hurt(SinewDamageTypes.causeMagicDamage(level.registryAccess(), attacker, source), magicDamage);
                 }
             }
         }

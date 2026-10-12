@@ -9,6 +9,8 @@ import net.minecraft.world.damagesource.DamageType;
 public class SinewDamageTypeTags {
 
     public static final TagKey<DamageType> IS_LAYERED = modDamageTag("is_layered");
+    public static final TagKey<DamageType> TRIGGERS_MAGIC_DAMAGE = modDamageTag("triggers_magic_damage");
+    public static final TagKey<DamageType> IGNORES_ATTACK_COOLDOWN_SCALING = modDamageTag("ignores_attack_cooldown_scaling");
 
     private static TagKey<DamageType> modDamageTag(String name) {
         return damageTag(Sinew.MOD_ID, name);

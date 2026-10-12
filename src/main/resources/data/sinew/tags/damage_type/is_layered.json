@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "sinew:projectile"
+    "sinew:projectile",
+    "sinew:magic"
   ]
 }
