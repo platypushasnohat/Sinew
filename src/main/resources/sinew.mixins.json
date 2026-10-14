@@ -16,6 +16,8 @@
   "client": [
     "client.GuiAccessor",
     "client.HumanoidModelMixin",
+    "client.ItemInHandLayerMixin",
+    "client.ItemInHandRendererMixin",
     "client.SoundEngineAccessor",
     "client.SoundManagerAccessor"
   ],
