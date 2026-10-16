@@ -91,7 +91,7 @@ public class CommonEvents {
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity target = event.getEntity();
         if (!(event.getSource().is(SinewDamageTypeTags.BYPASSES_DODGE) || target.getAttribute(SinewAttributes.DODGE_CHANCE) == null)) {
-            double dodgeChance = target.getAttributeValue(SinewAttributes.DODGE_CHANCE) / 100.0D;
+            double dodgeChance = target.getAttributeValue(SinewAttributes.DODGE_CHANCE);
             if (dodgeChance > 0.0D && target.getRandom().nextDouble() < dodgeChance) {
                 event.setCanceled(true);
             }
@@ -109,7 +109,7 @@ public class CommonEvents {
                 && !source.is(SinewDamageTypeTags.DOES_NOT_LIFESTEAL)
                 && !target.getType().is(SinewEntityTags.BLOCK_LIFESTEAL)
                 && attacker.getAttribute(SinewAttributes.LIFE_STEAL) != null) {
-            float lifeSteal = (float) attacker.getAttributeValue(SinewAttributes.LIFE_STEAL) / 100.0F;
+            float lifeSteal = (float) attacker.getAttributeValue(SinewAttributes.LIFE_STEAL);
             float damageDealt = event.getNewDamage();
             if (lifeSteal > 0.0F && damageDealt > 0.0F && attacker.isAlive()) {
                 attacker.heal(damageDealt * lifeSteal);
