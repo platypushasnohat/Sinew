@@ -49,6 +49,7 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.DODGE_CHANCE);
             event.add(entityType, SinewAttributes.LIFE_STEAL);
             event.add(entityType, SinewAttributes.ARMOR_PIERCING);
+            event.add(entityType, SinewAttributes.DAMAGE_REDUCTION);
         });
     }
 
@@ -115,6 +116,18 @@ public class CommonEvents {
             double dodgeChance = target.getAttributeValue(SinewAttributes.DODGE_CHANCE);
             if (dodgeChance > 0.0D && target.getRandom().nextDouble() < dodgeChance) {
                 event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDamagePre(LivingDamageEvent.Pre event) {
+        LivingEntity target = event.getEntity();
+        DamageSource source = event.getSource();
+        if (!source.is(DamageTypeTags.BYPASSES_EFFECTS) && !source.is(DamageTypeTags.BYPASSES_RESISTANCE) && target.getAttribute(SinewAttributes.DAMAGE_REDUCTION) != null) {
+            float damageReduction = (float) Mth.clamp(target.getAttributeValue(SinewAttributes.DAMAGE_REDUCTION), 0.0D, 1.0D);
+            if (damageReduction > 0.0F) {
+                event.setNewDamage(event.getNewDamage() * (1.0F - damageReduction));
             }
         }
     }

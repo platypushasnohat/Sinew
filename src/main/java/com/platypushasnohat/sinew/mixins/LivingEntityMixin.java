@@ -1,5 +1,7 @@
 package com.platypushasnohat.sinew.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.tags.SinewDamageTypeTags;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -33,5 +35,10 @@ public abstract class LivingEntityMixin {
             return SoundEvents.EMPTY;
         }
         return this.getDeathSound();
+    }
+
+    @ModifyExpressionValue(method = "getDamageAfterMagicAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"))
+    private boolean sinew$disableVanillaResistance(boolean hasEffect) {
+        return hasEffect && !SinewConfig.RESISTANCE_USES_DAMAGE_REDUCTION.get();
     }
 }

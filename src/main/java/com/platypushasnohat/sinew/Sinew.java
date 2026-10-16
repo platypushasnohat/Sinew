@@ -11,10 +11,13 @@ import com.platypushasnohat.sinew.registry.SinewDataComponents;
 import com.platypushasnohat.sinew.utils.SinewClientProxy;
 import com.platypushasnohat.sinew.utils.SinewCommonProxy;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -38,8 +41,17 @@ public class Sinew {
     public Sinew(IEventBus modEventBus, ModContainer modContainer) {
         SinewAttributes.ATTRIBUTES.register(modEventBus);
         SinewDataComponents.DATA_COMPONENTS.register(modEventBus);
+        modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::packetSetup);
         modContainer.registerConfig(ModConfig.Type.COMMON, SinewConfig.COMMON_CONFIG, "sinew-common.toml");
+    }
+
+    public void commonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            if (SinewConfig.RESISTANCE_USES_DAMAGE_REDUCTION.get()) {
+                MobEffects.DAMAGE_RESISTANCE.value().addAttributeModifier(SinewAttributes.DAMAGE_REDUCTION, location("effect.resistance"), 0.2D, AttributeModifier.Operation.ADD_VALUE);
+            }
+        });
     }
 
     public void packetSetup(RegisterPayloadHandlersEvent event) {
