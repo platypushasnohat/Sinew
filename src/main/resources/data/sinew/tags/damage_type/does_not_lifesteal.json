@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:falling_anvil",
+    "minecraft:on_fire",
+    "minecraft:lava",
+    "minecraft:fall",
+    "minecraft:thorns",
+    "minecraft:in_fire",
+    "minecraft:cramming"
+  ]
+}

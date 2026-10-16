@@ -11,6 +11,8 @@ public class SinewDamageTypeTags {
     public static final TagKey<DamageType> IS_LAYERED = modDamageTag("is_layered");
     public static final TagKey<DamageType> TRIGGERS_MAGIC_DAMAGE = modDamageTag("triggers_magic_damage");
     public static final TagKey<DamageType> IGNORES_ATTACK_COOLDOWN_SCALING = modDamageTag("ignores_attack_cooldown_scaling");
+    public static final TagKey<DamageType> BYPASSES_DODGE = modDamageTag("bypasses_dodge");
+    public static final TagKey<DamageType> DOES_NOT_LIFESTEAL = modDamageTag("does_not_lifesteal");
 
     private static TagKey<DamageType> modDamageTag(String name) {
         return damageTag(Sinew.MOD_ID, name);

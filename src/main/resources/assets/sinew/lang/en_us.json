@@ -3,6 +3,8 @@
   "attribute.sinew.name.generic.air_speed": "Air Speed",
   "attribute.sinew.name.generic.experience_boost": "Experience Boost",
   "attribute.sinew.name.generic.magic_damage": "Magic Damage",
+  "attribute.sinew.name.generic.dodge_chance": "Dodge Chance",
+  "attribute.sinew.name.generic.life_steal": "Life Steal",
   "entity.sinew.all.command_0": "Invalid Command",
   "entity.sinew.all.command_1": "%s is staying",
   "entity.sinew.all.command_2": "%s is following",

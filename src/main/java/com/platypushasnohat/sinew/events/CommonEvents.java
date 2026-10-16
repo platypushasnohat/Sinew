@@ -26,6 +26,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
@@ -42,6 +43,8 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.AIR_SPEED);
             event.add(entityType, SinewAttributes.EXPERIENCE_BOOST);
             event.add(entityType, SinewAttributes.MAGIC_DAMAGE);
+            event.add(entityType, SinewAttributes.DODGE_CHANCE);
+            event.add(entityType, SinewAttributes.LIFE_STEAL);
         });
     }
 
@@ -85,10 +88,33 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
+    public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
+        LivingEntity target = event.getEntity();
+        if (!(event.getSource().is(SinewDamageTypeTags.BYPASSES_DODGE) || target.getAttribute(SinewAttributes.DODGE_CHANCE) == null)) {
+            double dodgeChance = target.getAttributeValue(SinewAttributes.DODGE_CHANCE) / 100.0D;
+            if (dodgeChance > 0.0D && target.getRandom().nextDouble() < dodgeChance) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingDamagePost(LivingDamageEvent.Post event) {
         LivingEntity target = event.getEntity();
         Level level = target.level();
         DamageSource source = event.getSource();
+
+        if (source.getEntity() instanceof LivingEntity attacker
+                && attacker != target
+                && !source.is(SinewDamageTypeTags.DOES_NOT_LIFESTEAL)
+                && !target.getType().is(SinewEntityTags.BLOCK_LIFESTEAL)
+                && attacker.getAttribute(SinewAttributes.LIFE_STEAL) != null) {
+            float lifeSteal = (float) attacker.getAttributeValue(SinewAttributes.LIFE_STEAL) / 100.0F;
+            float damageDealt = event.getNewDamage();
+            if (lifeSteal > 0.0F && damageDealt > 0.0F && attacker.isAlive()) {
+                attacker.heal(damageDealt * lifeSteal);
+            }
+        }
 
         if (source.getEntity() instanceof LivingEntity attacker && !source.is(SinewDamageTypeTags.IS_LAYERED)) {
             if (source.is(DamageTypeTags.IS_PROJECTILE) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {

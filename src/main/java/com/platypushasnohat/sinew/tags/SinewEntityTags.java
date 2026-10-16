@@ -12,6 +12,7 @@ public class SinewEntityTags {
 
     public static final TagKey<EntityType<?>> POST_NETHER_SPAWNS = modEntityTag("post_nether_spawns");
     public static final TagKey<EntityType<?>> POST_END_SPAWNS = modEntityTag("post_end_spawns");
+    public static final TagKey<EntityType<?>> BLOCK_LIFESTEAL = modEntityTag("block_lifesteal");
 
     private static TagKey<EntityType<?>> modEntityTag(String name) {
         return entityTag(Sinew.MOD_ID, name);
