@@ -4,7 +4,10 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "sinew.refmap.json",
   "mixins": [
+    "ApplyBonusCountMixin",
     "BrushItemMixin",
+    "EnchantedCountIncreaseFunctionMixin",
+    "EnchantmentHelperMixin",
     "LandRandomPosMixin",
     "LivingEntityMixin",
     "PlayerMixin",

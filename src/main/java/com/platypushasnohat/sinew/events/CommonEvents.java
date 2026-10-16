@@ -7,10 +7,12 @@ import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDamageTypes;
 import com.platypushasnohat.sinew.tags.SinewDamageTypeTags;
 import com.platypushasnohat.sinew.tags.SinewEntityTags;
+import com.platypushasnohat.sinew.utils.SinewSoundUtils;
 import com.platypushasnohat.sinew.world.SinewWorldData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatRules;
@@ -77,23 +79,6 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onLivingIncomingDamageArmorPiercing(LivingIncomingDamageEvent event) {
-        LivingEntity target = event.getEntity();
-        DamageSource source = event.getSource();
-        if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && source.getEntity() instanceof LivingEntity attacker && attacker.getAttribute(SinewAttributes.ARMOR_PIERCING) != null) {
-            float armorPiercing = (float) Mth.clamp(attacker.getAttributeValue(SinewAttributes.ARMOR_PIERCING), 0.0D, 1.0D);
-            if (armorPiercing > 0.0F) {
-                event.getContainer().addModifier(DamageContainer.Reduction.ARMOR, (container, reduction) -> {
-                    float damage = container.getNewDamage();
-                    float armor = target.getArmorValue() * (1.0F - armorPiercing);
-                    float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * (1.0F - armorPiercing);
-                    return Math.min(reduction, damage - CombatRules.getDamageAfterAbsorb(target, damage, source, armor, toughness));
-                });
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player entity = event.getEntity();
         if (entity instanceof ServerPlayer serverPlayer && serverPlayer.getServer() != null) {
@@ -112,10 +97,27 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity target = event.getEntity();
+        DamageSource source = event.getSource();
+
+        // dodge
         if (!(event.getSource().is(SinewDamageTypeTags.BYPASSES_DODGE) || target.getAttribute(SinewAttributes.DODGE_CHANCE) == null)) {
             double dodgeChance = target.getAttributeValue(SinewAttributes.DODGE_CHANCE);
             if (dodgeChance > 0.0D && target.getRandom().nextDouble() < dodgeChance) {
+                target.level().playSound(null, target.blockPosition(), SoundEvents.EGG_THROW, target.getSoundSource(), 0.3F, SinewSoundUtils.randomizePitch(target.level()));
                 event.setCanceled(true);
+            }
+        }
+
+        // armor pierce
+        if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && source.getEntity() instanceof LivingEntity attacker && attacker.getAttribute(SinewAttributes.ARMOR_PIERCING) != null) {
+            float armorPiercing = (float) Mth.clamp(attacker.getAttributeValue(SinewAttributes.ARMOR_PIERCING), 0.0D, 1.0D);
+            if (armorPiercing > 0.0F) {
+                event.getContainer().addModifier(DamageContainer.Reduction.ARMOR, (container, reduction) -> {
+                    float damage = container.getNewDamage();
+                    float armor = target.getArmorValue() * (1.0F - armorPiercing);
+                    float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * (1.0F - armorPiercing);
+                    return Math.min(reduction, damage - CombatRules.getDamageAfterAbsorb(target, damage, source, armor, toughness));
+                });
             }
         }
     }
@@ -138,6 +140,7 @@ public class CommonEvents {
         Level level = target.level();
         DamageSource source = event.getSource();
 
+        // life steal
         if (source.getEntity() instanceof LivingEntity attacker
                 && attacker != target
                 && !source.is(SinewDamageTypeTags.DOES_NOT_LIFESTEAL)
@@ -150,6 +153,7 @@ public class CommonEvents {
             }
         }
 
+        // layered damage types
         if (source.getEntity() instanceof LivingEntity attacker && !source.is(SinewDamageTypeTags.IS_LAYERED)) {
             if (source.is(DamageTypeTags.IS_PROJECTILE) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
                 float projectileDamage = (float) attacker.getAttributeValue(SinewAttributes.PROJECTILE_DAMAGE);
