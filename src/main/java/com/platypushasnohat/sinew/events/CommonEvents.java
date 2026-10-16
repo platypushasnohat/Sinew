@@ -13,9 +13,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -23,6 +25,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -45,6 +48,7 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.MAGIC_DAMAGE);
             event.add(entityType, SinewAttributes.DODGE_CHANCE);
             event.add(entityType, SinewAttributes.LIFE_STEAL);
+            event.add(entityType, SinewAttributes.ARMOR_PIERCING);
         });
     }
 
@@ -67,6 +71,23 @@ public class CommonEvents {
                         event.setCanceled(true);
                     }
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingIncomingDamageArmorPiercing(LivingIncomingDamageEvent event) {
+        LivingEntity target = event.getEntity();
+        DamageSource source = event.getSource();
+        if (!source.is(DamageTypeTags.BYPASSES_ARMOR) && source.getEntity() instanceof LivingEntity attacker && attacker.getAttribute(SinewAttributes.ARMOR_PIERCING) != null) {
+            float armorPiercing = (float) Mth.clamp(attacker.getAttributeValue(SinewAttributes.ARMOR_PIERCING), 0.0D, 1.0D);
+            if (armorPiercing > 0.0F) {
+                event.getContainer().addModifier(DamageContainer.Reduction.ARMOR, (container, reduction) -> {
+                    float damage = container.getNewDamage();
+                    float armor = target.getArmorValue() * (1.0F - armorPiercing);
+                    float toughness = (float) target.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * (1.0F - armorPiercing);
+                    return Math.min(reduction, damage - CombatRules.getDamageAfterAbsorb(target, damage, source, armor, toughness));
+                });
             }
         }
     }

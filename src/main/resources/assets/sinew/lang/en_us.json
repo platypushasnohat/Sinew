@@ -5,6 +5,7 @@
   "attribute.sinew.name.generic.magic_damage": "Magic Damage",
   "attribute.sinew.name.generic.dodge_chance": "Dodge Chance",
   "attribute.sinew.name.generic.life_steal": "Life Steal",
+  "attribute.sinew.name.generic.armor_piercing": "Armor Piercing",
   "entity.sinew.all.command_0": "Invalid Command",
   "entity.sinew.all.command_1": "%s is staying",
   "entity.sinew.all.command_2": "%s is following",

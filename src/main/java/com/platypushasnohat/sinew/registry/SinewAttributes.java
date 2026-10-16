@@ -18,6 +18,7 @@ public class SinewAttributes {
     public static final DeferredHolder<Attribute, Attribute> MAGIC_DAMAGE = register("magic_damage", 0.0D, -2048.0D, 2048.0D);
     public static final DeferredHolder<Attribute, Attribute> DODGE_CHANCE = registerPercentage("dodge_chance", 0.0D, 0.0D, 1.0D);
     public static final DeferredHolder<Attribute, Attribute> LIFE_STEAL = registerPercentage("life_steal", 0.0D, 0.0D, 1024.0D);
+    public static final DeferredHolder<Attribute, Attribute> ARMOR_PIERCING = registerPercentage("armor_piercing", 0.0D, 0.0D, 1.0D);
 
     private static DeferredHolder<Attribute, Attribute> register(String name, double defaultValue, double minimumValue, double maximumValue) {
         return ATTRIBUTES.register(name, () -> new RangedAttribute("attribute." + Sinew.MOD_ID + ".name.generic." + name, defaultValue, minimumValue, maximumValue));
