@@ -24,7 +24,6 @@ public abstract class PlayerMixin extends LivingEntity {
         super(entityType, level);
     }
 
-    // todo: this doesn't work for some reason
     @Inject(method = "getFlyingSpeed", at = @At(value = "RETURN"), cancellable = true, remap = false)
     protected void sinew$getFlyingSpeed(CallbackInfoReturnable<Float> cir) {
         if (!this.isPassenger() && !this.abilities.flying) {

@@ -21,10 +21,10 @@ public class SinewAttributes {
     public static final DeferredHolder<Attribute, Attribute> ARMOR_PIERCING = registerPercentage("armor_piercing", 0.0D, 0.0D, 1.0D);
 
     private static DeferredHolder<Attribute, Attribute> register(String name, double defaultValue, double minimumValue, double maximumValue) {
-        return ATTRIBUTES.register(name, () -> new RangedAttribute("attribute." + Sinew.MOD_ID + ".name.generic." + name, defaultValue, minimumValue, maximumValue));
+        return ATTRIBUTES.register(name, () -> new RangedAttribute("attribute." + Sinew.MOD_ID + ".name.generic." + name, defaultValue, minimumValue, maximumValue).setSyncable(true));
     }
 
     private static DeferredHolder<Attribute, Attribute> registerPercentage(String name, double defaultValue, double minimumValue, double maximumValue) {
-        return ATTRIBUTES.register(name, () -> new PercentageAttribute("attribute." + Sinew.MOD_ID + ".name.generic." + name, defaultValue, minimumValue, maximumValue));
+        return ATTRIBUTES.register(name, () -> new PercentageAttribute("attribute." + Sinew.MOD_ID + ".name.generic." + name, defaultValue, minimumValue, maximumValue).setSyncable(true));
     }
 }
