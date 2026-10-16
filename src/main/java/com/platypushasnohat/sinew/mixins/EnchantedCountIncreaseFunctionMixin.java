@@ -22,7 +22,7 @@ public class EnchantedCountIncreaseFunctionMixin {
     @Final
     private Holder<Enchantment> enchantment;
 
-    @ModifyVariable(method = "run", at = @At(value = "STORE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentLevel(Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/LivingEntity;)I", ordinal = 0), index = 5)
+    @ModifyVariable(method = "run", at = @At(value = "STORE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getEnchantmentLevel(Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/LivingEntity;)I", ordinal = 0))
     private int sinew$getLootingLevel(int enchantmentLevel, ItemStack stack, LootContext lootContext) {
         if (this.enchantment.is(Enchantments.LOOTING) && lootContext.getParam(LootContextParams.THIS_ENTITY) instanceof Player player && player.getAttribute(SinewAttributes.LOOTING) != null) {
             return enchantmentLevel + (int) Math.round(player.getAttributeValue(SinewAttributes.LOOTING));

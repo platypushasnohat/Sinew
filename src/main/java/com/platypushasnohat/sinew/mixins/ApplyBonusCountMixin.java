@@ -22,7 +22,7 @@ public class ApplyBonusCountMixin {
     @Final
     private Holder<Enchantment> enchantment;
 
-    @ModifyVariable(method = "run", at = @At(value = "STORE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getItemEnchantmentLevel(Lnet/minecraft/core/Holder;Lnet/minecraft/world/item/ItemStack;)I", ordinal = 0), index = 4)
+    @ModifyVariable(method = "run", at = @At(value = "STORE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getItemEnchantmentLevel(Lnet/minecraft/core/Holder;Lnet/minecraft/world/item/ItemStack;)I", ordinal = 0))
     private int sinew$getFortuneLevel(int enchantmentLevel, ItemStack stack, LootContext lootContext) {
         if (this.enchantment.is(Enchantments.FORTUNE) && lootContext.getParam(LootContextParams.THIS_ENTITY) instanceof Player player && player.getAttribute(SinewAttributes.FORTUNE) != null) {
             return enchantmentLevel + (int) Math.round(player.getAttributeValue(SinewAttributes.FORTUNE));

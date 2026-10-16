@@ -52,6 +52,10 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.LIFE_STEAL);
             event.add(entityType, SinewAttributes.ARMOR_PIERCING);
             event.add(entityType, SinewAttributes.DAMAGE_REDUCTION);
+            event.add(entityType, SinewAttributes.FISHING_LUCK);
+            event.add(entityType, SinewAttributes.FISHING_LURE);
+            event.add(entityType, SinewAttributes.FORTUNE);
+            event.add(entityType, SinewAttributes.LOOTING);
         });
     }
 
