@@ -13,8 +13,8 @@ public class SinewAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, Sinew.MOD_ID);
 
     public static final DeferredHolder<Attribute, Attribute> PROJECTILE_DAMAGE = register("projectile_damage", 0.0D, 0.0D, 2048.0D);
-    public static final DeferredHolder<Attribute, Attribute> AIR_SPEED = registerPercentage("air_speed", 0.0D, -30.0D, 30.0D);
-    public static final DeferredHolder<Attribute, Attribute> EXPERIENCE_BOOST = registerPercentage("experience_boost", 0.0D, -30.0D, 30.0D);
+    public static final DeferredHolder<Attribute, Attribute> AIR_SPEED = registerPercentage("air_speed", 0.0D, 0.0D, 30.0D);
+    public static final DeferredHolder<Attribute, Attribute> EXPERIENCE_BOOST = registerPercentage("experience_boost", 0.0D, 0.0D, 30.0D);
     public static final DeferredHolder<Attribute, Attribute> MAGIC_DAMAGE = register("magic_damage", 0.0D, 0.0D, 2048.0D);
     public static final DeferredHolder<Attribute, Attribute> DODGE_CHANCE = registerPercentage("dodge_chance", 0.0D, 0.0D, 1.0D);
     public static final DeferredHolder<Attribute, Attribute> LIFE_STEAL = registerPercentage("life_steal", 0.0D, 0.0D, 1024.0D);
