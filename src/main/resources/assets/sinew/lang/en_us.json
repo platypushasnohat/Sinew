@@ -11,7 +11,7 @@
   "attribute.sinew.name.generic.fishing_luck": "Fishing Luck",
   "attribute.sinew.name.generic.fortune": "Fortune",
   "attribute.sinew.name.generic.looting": "Looting",
-  "attribute.sinew.name.generic.ammo_save_change": "Chance to Save Ammo",
+  "attribute.sinew.name.generic.ammo_save_chance": "Chance to Save Ammo",
   "entity.sinew.all.command_0": "Invalid Command",
   "entity.sinew.all.command_1": "%s is staying",
   "entity.sinew.all.command_2": "%s is following",
