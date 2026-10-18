@@ -159,7 +159,7 @@ public class CommonEvents {
 
         // layered damage types
         if (source.getEntity() instanceof LivingEntity attacker && !source.is(SinewDamageTypeTags.IS_LAYERED)) {
-            if (source.is(DamageTypeTags.IS_PROJECTILE) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
+            if (source.is(DamageTypeTags.IS_PROJECTILE) && !source.is(SinewDamageTypeTags.IGNORES_PROJECTILE_BONUS) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
                 float projectileDamage = (float) attacker.getAttributeValue(SinewAttributes.PROJECTILE_DAMAGE);
                 if (projectileDamage > 0.0F) {
                     target.invulnerableTime = 0;

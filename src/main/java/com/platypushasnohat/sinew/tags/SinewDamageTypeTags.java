@@ -13,6 +13,7 @@ public class SinewDamageTypeTags {
     public static final TagKey<DamageType> IGNORES_ATTACK_COOLDOWN_SCALING = modDamageTag("ignores_attack_cooldown_scaling");
     public static final TagKey<DamageType> BYPASSES_DODGE = modDamageTag("bypasses_dodge");
     public static final TagKey<DamageType> DOES_NOT_LIFESTEAL = modDamageTag("does_not_lifesteal");
+    public static final TagKey<DamageType> IGNORES_PROJECTILE_BONUS = modDamageTag("ignores_projectile_bonus");
 
     private static TagKey<DamageType> modDamageTag(String name) {
         return damageTag(Sinew.MOD_ID, name);
