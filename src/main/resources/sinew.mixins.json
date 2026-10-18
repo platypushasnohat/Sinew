@@ -14,7 +14,8 @@
     "ServerPlayerMixin",
     "ShearsItemMixin",
     "SweetBerryBushBlockMixin",
-    "TamableAnimalMixin"
+    "TamableAnimalMixin",
+    "ProjectileWeaponItemMixin"
   ],
   "client": [
     "client.GuiAccessor",

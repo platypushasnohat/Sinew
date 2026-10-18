@@ -57,6 +57,7 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.FISHING_LURE);
             event.add(entityType, SinewAttributes.FORTUNE);
             event.add(entityType, SinewAttributes.LOOTING);
+            event.add(entityType, SinewAttributes.AMMO_SAVE_CHANCE);
         });
     }
 
