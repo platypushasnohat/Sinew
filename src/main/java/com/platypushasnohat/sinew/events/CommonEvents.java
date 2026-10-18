@@ -3,6 +3,7 @@ package com.platypushasnohat.sinew.events;
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.entity.base.TamableMonster;
+import com.platypushasnohat.sinew.entity.utils.SplitProjectileBonus;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDamageTypes;
 import com.platypushasnohat.sinew.tags.SinewDamageTypeTags;
@@ -161,6 +162,9 @@ public class CommonEvents {
         if (source.getEntity() instanceof LivingEntity attacker && !source.is(SinewDamageTypeTags.IS_LAYERED)) {
             if (source.is(DamageTypeTags.IS_PROJECTILE) && !source.is(SinewDamageTypeTags.IGNORES_PROJECTILE_BONUS) && attacker.getAttribute(SinewAttributes.PROJECTILE_DAMAGE) != null) {
                 float projectileDamage = (float) attacker.getAttributeValue(SinewAttributes.PROJECTILE_DAMAGE);
+                if (source.getDirectEntity() instanceof SplitProjectileBonus split) {
+                    projectileDamage /= Math.max(split.getProjectileCount(), 1);
+                }
                 if (projectileDamage > 0.0F) {
                     target.invulnerableTime = 0;
                     target.hurt(SinewDamageTypes.causeProjectileDamage(level.registryAccess(), attacker, source), projectileDamage);
