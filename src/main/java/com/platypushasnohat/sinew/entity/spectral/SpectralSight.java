@@ -14,10 +14,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.EntityGetter;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -104,8 +110,8 @@ public class SpectralSight {
         if (canPerceiveDirectly(viewer, target)) {
             return true;
         }
-        //tamed and owned mobs share owner's current sight and isPerceivedBy unless overridden with SpectralSightSharing
-        //todo, when construct building is in, make it compatible with spectral mobs as well
+        //tamed and owned mobs share their owner's current sight sources and isPerceivedBy, unless overridden with SpectralSightSharing
+        //todo, when construct building is in, make it compatible with spectral mobs as well (construct building is a future endeavor)
         if (viewer instanceof OwnableEntity ownable && !(viewer instanceof SpectralSightSharing sharing && !sharing.sharesOwnerSight())) {
             LivingEntity owner = ownable.getOwner();
             return owner != null && owner != viewer && canPerceiveDirectly(owner, target);
@@ -148,13 +154,12 @@ public class SpectralSight {
         return !level.getEntitiesOfClass(Player.class, spectral.getBoundingBox().inflate(range), player -> !player.isSpectator() && player.distanceToSqr(spectral) <= range * range && canPerceive(player, spectral)).isEmpty();
     }
 
-    //same check endermen use
+    //true if the player's view line hits anywhere on the entity's hitbox, not just its eyes
     public static boolean isLookingAt(Player player, Entity entity) {
-        Vec3 view = player.getViewVector(1.0F).normalize();
-        Vec3 toEntity = new Vec3(entity.getX() - player.getX(), entity.getEyeY() - player.getEyeY(), entity.getZ() - player.getZ());
-        double distance = toEntity.length();
-        double dot = view.dot(toEntity.normalize());
-        return dot > 1.0D - 0.025D / distance && player.hasLineOfSight(entity);
+        Vec3 eye = player.getEyePosition();
+        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.distanceTo(entity) + entity.getBbWidth() + entity.getBbHeight()));
+        AABB hitbox = entity.getBoundingBox().inflate(0.3D);
+        return (hitbox.contains(eye) || hitbox.clip(eye, end).isPresent()) && player.hasLineOfSight(entity);
     }
 
     public static void retargetOrLoseSight(Mob mob, LivingEntity lostTarget) {

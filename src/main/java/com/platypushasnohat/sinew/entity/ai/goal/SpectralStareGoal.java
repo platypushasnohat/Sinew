@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.EnumSet;
@@ -15,9 +15,9 @@ import java.util.UUID;
 
 //this.targetSelector.addGoal(1, new SpectralStareGoal(this));
 //used by: every spectral mob that turns hostile when watched. not the Grell (Sulcus) it has a custom
-public class SpectralStareGoal extends Goal {
+//stays running while it has the target so TargetGoal drops creative, spectator, dead or out of range players
+public class SpectralStareGoal extends TargetGoal {
 
-    public final Mob mob;
     public final int stareTicks;
     public final double range;
     //canUse only runs every other tick
@@ -29,7 +29,7 @@ public class SpectralStareGoal extends Goal {
     }
 
     public SpectralStareGoal(Mob mob, int stareTicks, double range) {
-        this.mob = mob;
+        super(mob, false);
         this.stareTicks = stareTicks;
         this.range = range;
         this.setFlags(EnumSet.of(Flag.TARGET));
@@ -60,14 +60,11 @@ public class SpectralStareGoal extends Goal {
     }
 
     @Override
-    public boolean canContinueToUse() {
-        return false;
-    }
-
-    @Override
     public void start() {
+        this.targetMob = this.starer;
         this.mob.setTarget(this.starer);
         this.stareStarts.clear();
         this.starer = null;
+        super.start();
     }
 }
