@@ -2,10 +2,8 @@ package com.platypushasnohat.sinew;
 
 import com.mojang.logging.LogUtils;
 import com.platypushasnohat.sinew.config.SinewConfig;
-import com.platypushasnohat.sinew.network.ActionBarPacket;
-import com.platypushasnohat.sinew.network.MountedEntityKeyPacket;
-import com.platypushasnohat.sinew.network.MultipartEntityPacket;
-import com.platypushasnohat.sinew.network.ParticlePacket;
+import com.platypushasnohat.sinew.network.*;
+import com.platypushasnohat.sinew.registry.SinewAttachments;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDataComponents;
 import com.platypushasnohat.sinew.utils.SinewClientProxy;
@@ -41,6 +39,7 @@ public class Sinew {
     public Sinew(IEventBus modEventBus, ModContainer modContainer) {
         SinewAttributes.ATTRIBUTES.register(modEventBus);
         SinewDataComponents.DATA_COMPONENTS.register(modEventBus);
+        SinewAttachments.ATTACHMENT_TYPES.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::packetSetup);
         modContainer.registerConfig(ModConfig.Type.COMMON, SinewConfig.COMMON_CONFIG, "sinew-common.toml");
@@ -58,6 +57,7 @@ public class Sinew {
         PayloadRegistrar registrar = event.registrar(MOD_ID).versioned("1.0.0").optional();
         registrar.playToClient(ParticlePacket.TYPE, ParticlePacket.CODEC, ParticlePacket::handle);
         registrar.playToClient(ActionBarPacket.TYPE, ActionBarPacket.CODEC, ActionBarPacket::handle);
+        registrar.playToClient(SpectralSightPacket.TYPE, SpectralSightPacket.CODEC, SpectralSightPacket::handle);
 
         registrar.playToServer(MultipartEntityPacket.TYPE, MultipartEntityPacket.CODEC, MultipartEntityPacket::handle);
         registrar.playToServer(MountedEntityKeyPacket.TYPE, MountedEntityKeyPacket.CODEC, MountedEntityKeyPacket::handle);

@@ -8,6 +8,7 @@
     "BrushItemMixin",
     "EnchantedCountIncreaseFunctionMixin",
     "EnchantmentHelperMixin",
+    "EntityMixin",
     "LandRandomPosMixin",
     "LivingEntityMixin",
     "PlayerMixin",
@@ -18,6 +19,7 @@
     "ProjectileWeaponItemMixin"
   ],
   "client": [
+    "client.EntityRenderDispatcherMixin",
     "client.GuiAccessor",
     "client.HumanoidModelMixin",
     "client.ItemInHandLayerMixin",

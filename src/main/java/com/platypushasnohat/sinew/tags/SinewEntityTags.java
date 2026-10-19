@@ -13,6 +13,9 @@ public class SinewEntityTags {
     public static final TagKey<EntityType<?>> POST_NETHER_SPAWNS = modEntityTag("post_nether_spawns");
     public static final TagKey<EntityType<?>> POST_END_SPAWNS = modEntityTag("post_end_spawns");
     public static final TagKey<EntityType<?>> BLOCK_LIFESTEAL = modEntityTag("block_lifesteal");
+    //spectral mobs insanity lets players see.
+    //used by: Entropic, Envoy
+    public static final TagKey<EntityType<?>> TRIGGERED_BY_INSANITY = modEntityTag("triggered_by_insanity");
 
     private static TagKey<EntityType<?>> modEntityTag(String name) {
         return entityTag(Sinew.MOD_ID, name);
