@@ -22,6 +22,9 @@ public class SpectralStareGoal extends TargetGoal {
     public final double range;
     //canUse only runs every other tick
     protected final Object2IntMap<UUID> stareStarts = new Object2IntOpenHashMap<>();
+    //last tick each player was staring. looking away for up to lookAwayGraceTicks doesn't reset timer
+    protected final Object2IntMap<UUID> lastStares = new Object2IntOpenHashMap<>();
+    protected int lookAwayGraceTicks = 10;
     protected Player starer;
 
     public <T extends Mob & SpectralEntity> SpectralStareGoal(T mob) {
@@ -39,15 +42,20 @@ public class SpectralStareGoal extends TargetGoal {
     public boolean canUse() {
         if (this.mob.getTarget() != null && this.mob.getTarget().isAlive()) {
             this.stareStarts.clear();
+            this.lastStares.clear();
             return false;
         }
         List<Player> starers = this.mob.level().getEntitiesOfClass(Player.class, this.mob.getBoundingBox().inflate(this.range), this::isStaring);
-        this.stareStarts.keySet().removeIf(uuid -> starers.stream().noneMatch(player -> player.getUUID().equals(uuid)));
-        this.starer = null;
         for (Player player : starers) {
             if (!this.stareStarts.containsKey(player.getUUID())) {
                 this.stareStarts.put(player.getUUID(), this.mob.tickCount);
             }
+            this.lastStares.put(player.getUUID(), this.mob.tickCount);
+        }
+        this.stareStarts.keySet().removeIf(uuid -> this.mob.tickCount - this.lastStares.getInt(uuid) > this.lookAwayGraceTicks);
+        this.lastStares.keySet().removeIf(uuid -> !this.stareStarts.containsKey(uuid));
+        this.starer = null;
+        for (Player player : starers) {
             if (this.mob.tickCount - this.stareStarts.getInt(player.getUUID()) >= this.stareTicks && this.starer == null) {
                 this.starer = player;
             }
@@ -64,6 +72,7 @@ public class SpectralStareGoal extends TargetGoal {
         this.targetMob = this.starer;
         this.mob.setTarget(this.starer);
         this.stareStarts.clear();
+        this.lastStares.clear();
         this.starer = null;
         super.start();
     }

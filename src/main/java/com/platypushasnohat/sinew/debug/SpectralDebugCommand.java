@@ -13,14 +13,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 //DEBUG
-///spectral add <id>, /spectral remove <id>, /spectral list. any id that isn't sinew:insanity acts like goggles (sees everything)
+///sinew spectral add <id>, /sinew spectral remove <id>, /sinew spectral list. any id that isn't sinew:insanity acts like goggles (sees everything)
 //sinew:insanity gets removed again within a second unless you're actually insane
 @EventBusSubscriber(modid = Sinew.MOD_ID)
 public class SpectralDebugCommand {
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("spectral").requires(source -> source.hasPermission(2))
+        //merges with the other /sinew subcommands
+        event.getDispatcher().register(Commands.literal("sinew").requires(source -> source.hasPermission(2)).then(Commands.literal("spectral")
                 .then(Commands.literal("add").then(Commands.argument("source", ResourceLocationArgument.id()).executes(context -> {
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     ResourceLocation source = ResourceLocationArgument.getId(context, "source");
@@ -40,6 +41,6 @@ public class SpectralDebugCommand {
                     String sources = player.getData(SinewAttachments.SPECTRAL_SIGHT.get()).getSources().toString();
                     context.getSource().sendSuccess(() -> Component.literal("Spectral sight sources: " + sources), false);
                     return 1;
-                })));
+                }))));
     }
 }

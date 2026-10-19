@@ -25,6 +25,7 @@ public class SinewDebugEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SpectralTestZombie>> SPECTRAL_TEST_ZOMBIE = ENTITY_TYPES.register("spectral_test_zombie", () -> EntityType.Builder.of(SpectralTestZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).build("spectral_test_zombie"));
     public static final DeferredHolder<EntityType<?>, EntityType<SpectralTestVisibleZombie>> SPECTRAL_TEST_VISIBLE_ZOMBIE = ENTITY_TYPES.register("spectral_test_visible_zombie", () -> EntityType.Builder.of(SpectralTestVisibleZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).build("spectral_test_visible_zombie"));
     public static final DeferredHolder<EntityType<?>, EntityType<SpectralBlindWolf>> SPECTRAL_BLIND_WOLF = ENTITY_TYPES.register("spectral_blind_wolf", () -> EntityType.Builder.of(SpectralBlindWolf::new, MobCategory.CREATURE).sized(0.6F, 0.85F).build("spectral_blind_wolf"));
+    public static final DeferredHolder<EntityType<?>, EntityType<SpectralTestAudibleZombie>> SPECTRAL_TEST_AUDIBLE_ZOMBIE = ENTITY_TYPES.register("spectral_test_audible_zombie", () -> EntityType.Builder.of(SpectralTestAudibleZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).build("spectral_test_audible_zombie"));
 
     @EventBusSubscriber(modid = Sinew.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     public static class CommonModEvents {
@@ -34,6 +35,7 @@ public class SinewDebugEntities {
             event.put(SPECTRAL_TEST_ZOMBIE.get(), Zombie.createAttributes().build());
             event.put(SPECTRAL_TEST_VISIBLE_ZOMBIE.get(), Zombie.createAttributes().build());
             event.put(SPECTRAL_BLIND_WOLF.get(), Wolf.createAttributes().build());
+            event.put(SPECTRAL_TEST_AUDIBLE_ZOMBIE.get(), Zombie.createAttributes().build());
         }
     }
 
@@ -45,6 +47,7 @@ public class SinewDebugEntities {
             event.registerEntityRenderer(SPECTRAL_TEST_ZOMBIE.get(), ZombieRenderer::new);
             event.registerEntityRenderer(SPECTRAL_TEST_VISIBLE_ZOMBIE.get(), ZombieRenderer::new);
             event.registerEntityRenderer(SPECTRAL_BLIND_WOLF.get(), WolfRenderer::new);
+            event.registerEntityRenderer(SPECTRAL_TEST_AUDIBLE_ZOMBIE.get(), ZombieRenderer::new);
         }
     }
 }

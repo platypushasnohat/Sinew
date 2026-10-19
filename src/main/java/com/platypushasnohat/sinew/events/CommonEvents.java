@@ -21,6 +21,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -32,10 +33,12 @@ import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
 import java.util.List;
 
@@ -209,6 +212,26 @@ public class CommonEvents {
             if (!list.isEmpty()) {
                 event.setProblem(Player.BedSleepingProblem.NOT_SAFE);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        if (event.getEntity() instanceof EnderDragon dragon && dragon.level() instanceof ServerLevel serverLevel) {
+            SinewWorldData worldData = SinewWorldData.get(serverLevel);
+            if (!worldData.hasDragonBeenKilledBefore()) {
+                Sinew.LOGGER.info("End progression has been enabled");
+                worldData.setHasDragonBeenKilledBefore(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onServerStarted(ServerStartedEvent event) {
+        SinewWorldData worldData = SinewWorldData.get(event.getServer().overworld());
+        if (!worldData.isDragonFlagInitialized()) {
+            boolean dragonKilled = event.getServer().getWorldData().endDragonFightData().dragonKilled() || event.getServer().getWorldData().endDragonFightData().previouslyKilled();
+            worldData.setHasDragonBeenKilledBefore(dragonKilled);
         }
     }
 }

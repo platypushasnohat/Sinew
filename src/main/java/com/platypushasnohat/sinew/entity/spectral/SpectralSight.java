@@ -86,18 +86,24 @@ public class SpectralSight {
         }
     }
 
-    //spectral mobs hunting that can no longer perceive switch to another perceiving entity. if not use onTargetLostSight
+    //spectral mobs hunting the holder or its tames that can no longer perceive switch to another perceiving entity. if not use onTargetLostSight
     public static void removeSource(Entity holder, ResourceLocation source) {
         if (hasSource(holder, source)) {
-            List<Mob> hunters = holder.level().getEntitiesOfClass(Mob.class, holder.getBoundingBox().inflate(128.0D), mob -> mob instanceof SpectralEntity && mob.getTarget() == holder && canPerceive(holder, mob));
+            List<Mob> hunters = holder.level().getEntitiesOfClass(Mob.class, holder.getBoundingBox().inflate(128.0D), mob -> mob instanceof SpectralEntity && mob.getTarget() != null && isHolderOrOwnedBy(mob.getTarget(), holder) && canPerceive(mob.getTarget(), mob));
             holder.getData(SinewAttachments.SPECTRAL_SIGHT.get()).sources.remove(source);
             syncAndRefresh(holder);
             for (Mob hunter : hunters) {
-                if (!canPerceive(holder, hunter)) {
-                    retargetOrLoseSight(hunter, (LivingEntity) holder);
+                LivingEntity target = hunter.getTarget();
+                if (target != null && !canPerceive(target, hunter)) {
+                    retargetOrLoseSight(hunter, target);
                 }
             }
         }
+    }
+
+    //tames share their owner's sight, so they lose it when the owner does
+    private static boolean isHolderOrOwnedBy(LivingEntity target, Entity holder) {
+        return target == holder || (target instanceof OwnableEntity ownable && ownable.getOwner() == holder);
     }
 
     public static boolean canPerceive(@Nullable Entity viewer, Entity target) {
@@ -154,12 +160,19 @@ public class SpectralSight {
         return !level.getEntitiesOfClass(Player.class, spectral.getBoundingBox().inflate(range), player -> !player.isSpectator() && player.distanceToSqr(spectral) <= range * range && canPerceive(player, spectral)).isEmpty();
     }
 
-    //true if the player's view line hits anywhere on the entity's hitbox, not just its eyes
+    //true if the player's view line hits the entity's hitbox (padded half a block) or points within 15 degrees of its center
     public static boolean isLookingAt(Player player, Entity entity) {
+        return isLookingAt(player, entity, 15.0D);
+    }
+
+    public static boolean isLookingAt(Player player, Entity entity, double maxAngle) {
         Vec3 eye = player.getEyePosition();
-        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.distanceTo(entity) + entity.getBbWidth() + entity.getBbHeight()));
-        AABB hitbox = entity.getBoundingBox().inflate(0.3D);
-        return (hitbox.contains(eye) || hitbox.clip(eye, end).isPresent()) && player.hasLineOfSight(entity);
+        Vec3 view = player.getViewVector(1.0F);
+        Vec3 toCenter = entity.getBoundingBox().getCenter().subtract(eye);
+        Vec3 end = eye.add(view.scale(toCenter.length() + entity.getBbWidth() + entity.getBbHeight()));
+        AABB hitbox = entity.getBoundingBox().inflate(0.5D);
+        boolean aimed = hitbox.contains(eye) || hitbox.clip(eye, end).isPresent() || view.dot(toCenter.normalize()) >= Math.cos(Math.toRadians(maxAngle));
+        return aimed && player.hasLineOfSight(entity);
     }
 
     public static void retargetOrLoseSight(Mob mob, LivingEntity lostTarget) {

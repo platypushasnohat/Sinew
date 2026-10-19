@@ -18,5 +18,6 @@
   "entity.sinew.all.command_3": "%s is wandering",
   "entity.sinew.spectral_test_zombie": "Spectral Test Zombie",
   "entity.sinew.spectral_test_visible_zombie": "Visible Spectral Test Zombie",
-  "entity.sinew.spectral_blind_wolf": "Spectral Blind Wolf"
+  "entity.sinew.spectral_blind_wolf": "Spectral Blind Wolf",
+  "entity.sinew.spectral_test_audible_zombie": "Audible Spectral Test Zombie"
 }
