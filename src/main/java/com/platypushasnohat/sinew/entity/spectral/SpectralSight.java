@@ -14,11 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.EntityGetter;
@@ -105,6 +101,20 @@ public class SpectralSight {
         if (viewer == null) {
             return false;
         }
+        if (canPerceiveDirectly(viewer, target)) {
+            return true;
+        }
+        //tamed and owned mobs share owner's current sight and isPerceivedBy unless overridden with SpectralSightSharing
+        //todo, when construct building is in, make it compatible with spectral mobs as well
+        if (viewer instanceof OwnableEntity ownable && !(viewer instanceof SpectralSightSharing sharing && !sharing.sharesOwnerSight())) {
+            LivingEntity owner = ownable.getOwner();
+            return owner != null && owner != viewer && canPerceiveDirectly(owner, target);
+        }
+        return false;
+    }
+
+    //viewer's own perception only, without its owner's
+    private static boolean canPerceiveDirectly(Entity viewer, Entity target) {
         if (viewer == target || viewer instanceof SpectralEntity || viewer.isSpectator() || ((SpectralEntity) target).isPerceivedBy(viewer)) {
             return true;
         }
