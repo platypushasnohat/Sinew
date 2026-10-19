@@ -21,13 +21,18 @@ public class RandomMessageDamageSource extends DamageSource {
         this.messageCount = messageCount;
     }
 
+    public RandomMessageDamageSource(Holder.Reference<DamageType> message, Entity directEntity, Entity causingEntity, int messageCount) {
+        super(message, directEntity, causingEntity);
+        this.messageCount = messageCount;
+    }
+
     @Override
     public Component getLocalizedDeathMessage(LivingEntity attacked) {
         int type = attacked.getRandom().nextInt(this.messageCount);
         String string = "death.attack." + this.getMsgId() + "_" + type;
-        Entity entity = this.getDirectEntity() == null ? this.getEntity() : this.getDirectEntity();
-        if (entity != null) {
-            return Component.translatable(string + ".entity", attacked.getDisplayName(), entity.getDisplayName());
+        Entity killer = this.getEntity() == null ? this.getDirectEntity() : this.getEntity();
+        if (killer != null) {
+            return Component.translatable(string + ".entity", attacked.getDisplayName(), killer.getDisplayName());
         } else {
             return Component.translatable(string, attacked.getDisplayName());
         }
