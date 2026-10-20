@@ -11,11 +11,11 @@
     "LandRandomPosMixin",
     "LivingEntityMixin",
     "PlayerMixin",
+    "ProjectileWeaponItemMixin",
     "ServerPlayerMixin",
     "ShearsItemMixin",
     "SweetBerryBushBlockMixin",
-    "TamableAnimalMixin",
-    "ProjectileWeaponItemMixin"
+    "TamableAnimalMixin"
   ],
   "client": [
     "client.GuiAccessor",
