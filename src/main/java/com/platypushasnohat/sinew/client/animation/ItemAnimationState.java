@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.function.Consumer;
 
+@Deprecated
 public class ItemAnimationState {
 
     private long lastTime = Long.MAX_VALUE;
