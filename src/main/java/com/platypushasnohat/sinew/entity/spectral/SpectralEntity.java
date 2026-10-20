@@ -24,6 +24,13 @@ public interface SpectralEntity {
         return 100;
     }
 
+    //ticks this mob takes to fade in after it appears on a client (gaining sight, coming into range, spawning nearby), 50 = 2.5 seconds. 0 pops in instantly
+    //used by: every spectral mob with a LivingEntityRenderer. Sulcus and Roamer should override to 0 and handle their own reveal
+    //layers (armor, held items, eyes) and the shadow are hidden until the fade finishes
+    default int getFadeInTicks() {
+        return 50;
+    }
+
     //lets this mob be perceived by viewers on its own in addition to their sight sources
     //used by: Sulcus (formerly grell) (materializing for the starer + staying seen after it aggros + its fake copies follow the real one + everyone once enraged at half health)
     //used by Parasoul (everyone sees once pacified with sake), Icicat on revealing itself, Wight while not in retreat mode

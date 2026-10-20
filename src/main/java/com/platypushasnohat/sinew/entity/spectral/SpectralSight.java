@@ -147,6 +147,14 @@ public class SpectralSight {
 
     //client side: true for visible without special equipment mob the local player can't perceive. intangible
     //used by: Roamer, Ghost, Icicat, Envoy and Sovereign, through the isPickable, glow, fire, push and hitbox mixins
+    //client side: 0 to 1 fade in progress. client entities are created fresh when they appear, so tickCount counts from then
+    public static float getFadeIn(Entity entity) {
+        if (entity.level().isClientSide() && entity instanceof SpectralEntity spectral && spectral.getFadeInTicks() > 0) {
+            return Math.min((float) entity.tickCount / spectral.getFadeInTicks(), 1.0F);
+        }
+        return 1.0F;
+    }
+
     public static boolean isIntangibleOnClient(Entity target) {
         return target.level().isClientSide() && !isPerceivedByClient(target);
     }
