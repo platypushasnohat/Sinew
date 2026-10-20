@@ -4,9 +4,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.platypushasnohat.sinew.client.animation.ItemAnimationState;
 import com.platypushasnohat.sinew.client.animation.ItemKeyframeAnimations;
+import com.platypushasnohat.sinew.item.ItemAnimations;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -64,6 +67,28 @@ public abstract class AnimatedItemModel<I extends Item> extends Model {
 
     protected void animate(Entity entity, ItemAnimationState animationState, AnimationHolder animation, float ageInTicks, float speed) {
         this.animate(entity, animationState, animation.get(), ageInTicks, speed);
+    }
+
+    protected void animate(ItemStack stack, String name, AnimationDefinition animationDefinition) {
+        this.animate(stack, name, animationDefinition, 1.0F);
+    }
+
+    protected void animate(ItemStack stack, String name, AnimationHolder animation) {
+        this.animate(stack, name, animation.get());
+    }
+
+    protected void animate(ItemStack stack, String name, AnimationDefinition animationDefinition, float speed) {
+        Long startTime = ItemAnimations.getStartTimes(stack).get(name);
+        ClientLevel level = Minecraft.getInstance().level;
+        if (startTime != null && level != null) {
+            float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+            long accumulatedTime = Math.max(0L, (long) ((level.getGameTime() - startTime + partialTick) * 50.0F * speed));
+            ItemKeyframeAnimations.animate(this, animationDefinition, accumulatedTime, 1.0F, ANIMATION_VECTOR_CACHE);
+        }
+    }
+
+    protected void animate(ItemStack stack, String name, AnimationHolder animation, float speed) {
+        this.animate(stack, name, animation.get(), speed);
     }
 
     protected void applyStatic(AnimationDefinition animationDefinition) {
