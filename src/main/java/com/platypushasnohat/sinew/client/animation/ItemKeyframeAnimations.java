@@ -16,8 +16,7 @@ public class ItemKeyframeAnimations {
 
     public static void animate(AnimatedItemModel<?> model, AnimationDefinition animationDefinition, long accumulatedTime, float scale, Vector3f animationVecCache) {
         float f = getElapsedSeconds(animationDefinition, accumulatedTime);
-
-        for(Map.Entry<String, List<AnimationChannel>> entry : animationDefinition.boneAnimations().entrySet()) {
+        for (Map.Entry<String, List<AnimationChannel>> entry : animationDefinition.boneAnimations().entrySet()) {
             Optional<ModelPart> optional = model.getAnyDescendantWithName(entry.getKey());
             List<AnimationChannel> list = entry.getValue();
             optional.ifPresent((arg) -> list.forEach((arg2) -> {
@@ -38,7 +37,6 @@ public class ItemKeyframeAnimations {
                 arg2.target().apply(arg, animationVecCache);
             }));
         }
-
     }
 
     private static float getElapsedSeconds(AnimationDefinition animationDefinition, long accumulatedTime) {
