@@ -81,8 +81,8 @@ public abstract class AnimatedItemModel<I extends Item> extends Model {
         Long startTime = ItemAnimations.getStartTimes(stack).get(name);
         ClientLevel level = Minecraft.getInstance().level;
         if (startTime != null && level != null) {
-            float partialTick = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
-            long accumulatedTime = Math.max(0L, (long) ((level.getGameTime() - startTime + partialTick) * 50.0F * speed));
+            float partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+            long accumulatedTime = Math.max(0L, (long) ((level.getGameTime() - startTime + partialTicks) * 50.0F * speed));
             ItemKeyframeAnimations.animate(this, animationDefinition, accumulatedTime, 1.0F, ANIMATION_VECTOR_CACHE);
         }
     }
