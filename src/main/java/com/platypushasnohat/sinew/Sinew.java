@@ -7,6 +7,7 @@ import com.platypushasnohat.sinew.network.*;
 import com.platypushasnohat.sinew.registry.SinewAttachments;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDataComponents;
+import com.platypushasnohat.sinew.registry.SinewEnchantmentEffects;
 import com.platypushasnohat.sinew.utils.SinewClientProxy;
 import com.platypushasnohat.sinew.utils.SinewCommonProxy;
 import net.minecraft.resources.ResourceLocation;
@@ -42,6 +43,8 @@ public class Sinew {
         SinewDataComponents.DATA_COMPONENTS.register(modEventBus);
         SinewAttachments.ATTACHMENT_TYPES.register(modEventBus);
         SinewDebugEntities.ENTITY_TYPES.register(modEventBus);
+        SinewEnchantmentEffects.ENTITY_EFFECTS.register(modEventBus);
+        SinewEnchantmentEffects.LOCATION_EFFECTS.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::packetSetup);
         modContainer.registerConfig(ModConfig.Type.COMMON, SinewConfig.COMMON_CONFIG, "sinew-common.toml");
