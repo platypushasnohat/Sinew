@@ -17,7 +17,7 @@ public record FreezeEffect(LevelBasedValue duration) implements EnchantmentEntit
 
     @Override
     public void apply(ServerLevel level, int enchantmentLevel, EnchantedItemInUse item, Entity entity, Vec3 origin) {
-        int maxFreezeTicks = entity.getTicksRequiredToFreeze() * 2;
+        int maxFreezeTicks = entity.getTicksRequiredToFreeze() * 4;
         entity.setTicksFrozen(Math.min(entity.getTicksFrozen() + Math.round(this.duration.calculate(enchantmentLevel)), maxFreezeTicks));
     }
 
