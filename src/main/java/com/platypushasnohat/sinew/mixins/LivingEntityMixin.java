@@ -40,7 +40,7 @@ public abstract class LivingEntityMixin {
     }
 
     @ModifyExpressionValue(method = "getDamageAfterMagicAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"))
-    private boolean sinew$disableVanillaResistance(boolean hasEffect) {
+    private boolean sinew$getDamageAfterMagicAbsorb(boolean hasEffect) {
         return hasEffect && !SinewConfig.RESISTANCE_USES_DAMAGE_REDUCTION.get();
     }
 

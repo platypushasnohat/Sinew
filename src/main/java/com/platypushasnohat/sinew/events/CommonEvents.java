@@ -9,9 +9,13 @@ import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDamageTypes;
 import com.platypushasnohat.sinew.tags.SinewDamageTypeTags;
 import com.platypushasnohat.sinew.tags.SinewEntityTags;
+import com.platypushasnohat.sinew.tags.SinewMobEffectTags;
+import com.platypushasnohat.sinew.utils.SinewAttributeUtils;
+import com.platypushasnohat.sinew.utils.SinewMobEffectUtils;
 import com.platypushasnohat.sinew.utils.SinewSoundUtils;
 import com.platypushasnohat.sinew.world.SinewWorldData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -19,6 +23,9 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,12 +37,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
@@ -54,13 +63,18 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.EXPERIENCE_BOOST);
             event.add(entityType, SinewAttributes.MAGIC_DAMAGE);
             event.add(entityType, SinewAttributes.DODGE_CHANCE);
-            event.add(entityType, SinewAttributes.LIFE_STEAL);
+            event.add(entityType, SinewAttributes.LIFESTEAL);
             event.add(entityType, SinewAttributes.ARMOR_PIERCING);
-            event.add(entityType, SinewAttributes.DAMAGE_REDUCTION);
+            event.add(entityType, SinewAttributes.DAMAGE_RESISTANCE);
             event.add(entityType, SinewAttributes.FISHING_LUCK);
             event.add(entityType, SinewAttributes.FISHING_LURE);
             event.add(entityType, SinewAttributes.FORTUNE);
             event.add(entityType, SinewAttributes.LOOTING);
+            event.add(entityType, SinewAttributes.AMMO_CONSERVATION);
+            event.add(entityType, SinewAttributes.MAGIC_RESISTANCE);
+            event.add(entityType, SinewAttributes.PROJECTILE_RESISTANCE);
+            event.add(entityType, SinewAttributes.FIRE_RESISTANCE);
+            event.add(entityType, SinewAttributes.NEGATIVE_EFFECT_DURATION);
             event.add(entityType, SinewAttributes.AMMO_SAVE_CHANCE);
             event.add(entityType, SinewAttributes.MANA_CONSERVE_CHANCE);
         });
@@ -71,19 +85,17 @@ public class CommonEvents {
         LivingEntity entity = event.getEntity();
         LevelAccessor level = event.getLevel();
         boolean validSpawn = event.getSpawnType() != MobSpawnType.COMMAND && event.getSpawnType() != MobSpawnType.BUCKET && event.getSpawnType() != MobSpawnType.SPAWN_EGG && event.getSpawnType() != MobSpawnType.DISPENSER;
-        if (SinewConfig.ENABLE_PROGRESSION.get()) {
-            if (!event.isCanceled()) {
-                if (validSpawn && level instanceof ServerLevel serverLevel) {
-                    boolean netherEntered = SinewWorldData.get(serverLevel).hasNetherBeenEnteredBefore();
-                    boolean postDragon = serverLevel.getServer().getWorldData().endDragonFightData().dragonKilled() || serverLevel.getServer().getWorldData().endDragonFightData().previouslyKilled();
-                    if (entity.getType().is(SinewEntityTags.POST_NETHER_SPAWNS) && !netherEntered) {
-                        event.setSpawnCancelled(true);
-                        event.setCanceled(true);
-                    }
-                    if (entity.getType().is(SinewEntityTags.POST_END_SPAWNS) && !postDragon) {
-                        event.setSpawnCancelled(true);
-                        event.setCanceled(true);
-                    }
+        if (SinewConfig.ENABLE_PROGRESSION.get() && !event.isCanceled()) {
+            if (validSpawn && level instanceof ServerLevel serverLevel) {
+                boolean netherEntered = SinewWorldData.get(serverLevel).hasNetherBeenEnteredBefore();
+                boolean postDragon = serverLevel.getServer().getWorldData().endDragonFightData().dragonKilled() || serverLevel.getServer().getWorldData().endDragonFightData().previouslyKilled();
+                if (entity.getType().is(SinewEntityTags.POST_NETHER_SPAWNS) && !netherEntered) {
+                    event.setSpawnCancelled(true);
+                    event.setCanceled(true);
+                }
+                if (entity.getType().is(SinewEntityTags.POST_END_SPAWNS) && !postDragon) {
+                    event.setSpawnCancelled(true);
+                    event.setCanceled(true);
                 }
             }
         }
@@ -108,13 +120,17 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity target = event.getEntity();
+        Level level = target.level();
         DamageSource source = event.getSource();
 
         // dodge
-        if (!(event.getSource().is(SinewDamageTypeTags.BYPASSES_DODGE) || target.getAttribute(SinewAttributes.DODGE_CHANCE) == null)) {
+        if (!(source.is(SinewDamageTypeTags.BYPASSES_DODGE) || target.getAttribute(SinewAttributes.DODGE_CHANCE) == null)) {
             double dodgeChance = target.getAttributeValue(SinewAttributes.DODGE_CHANCE);
             if (dodgeChance > 0.0D && target.getRandom().nextDouble() < dodgeChance) {
-                target.level().playSound(null, target.blockPosition(), SoundEvents.EGG_THROW, target.getSoundSource(), 0.3F, SinewSoundUtils.randomizePitch(target.level()));
+                if (level instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(ParticleTypes.POOF, target.getX(), target.getY(0.5D), target.getZ(), 10, 0.3D, 0.5D, 0.3D, 0.05D);
+                }
+                level.playSound(null, target.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, target.getSoundSource(), 0.5F, SinewSoundUtils.randomizePitch(target));
                 event.setCanceled(true);
             }
         }
@@ -135,12 +151,30 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void onLivingDamagePre(LivingDamageEvent.Pre event) {
-        LivingEntity target = event.getEntity();
         DamageSource source = event.getSource();
-        if (!source.is(DamageTypeTags.BYPASSES_EFFECTS) && !source.is(DamageTypeTags.BYPASSES_RESISTANCE) && target.getAttribute(SinewAttributes.DAMAGE_REDUCTION) != null) {
-            float damageReduction = (float) Mth.clamp(target.getAttributeValue(SinewAttributes.DAMAGE_REDUCTION), 0.0D, 1.0D);
-            if (damageReduction > 0.0F) {
-                event.setNewDamage(event.getNewDamage() * (1.0F - damageReduction));
+        if (!source.is(DamageTypeTags.BYPASSES_EFFECTS) && !source.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
+            SinewAttributeUtils.applyDamageResistance(event, SinewAttributes.DAMAGE_RESISTANCE);
+        }
+        if (source.is(DamageTypeTags.IS_FIRE)) {
+            SinewAttributeUtils.applyDamageResistance(event, SinewAttributes.FIRE_RESISTANCE);
+        }
+        if (source.is(DamageTypeTags.IS_PROJECTILE)) {
+            SinewAttributeUtils.applyDamageResistance(event, SinewAttributes.PROJECTILE_RESISTANCE);
+        }
+        if (source.is(Tags.DamageTypes.IS_MAGIC)) {
+            SinewAttributeUtils.applyDamageResistance(event, SinewAttributes.MAGIC_RESISTANCE);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMobEffectAdded(MobEffectEvent.Added event) {
+        LivingEntity entity = event.getEntity();
+        if (event.getOldEffectInstance() == null && entity.getAttribute(SinewAttributes.NEGATIVE_EFFECT_DURATION) != null) {
+            float attributeValue = (float) entity.getAttributeValue(SinewAttributes.NEGATIVE_EFFECT_DURATION);
+            MobEffectInstance effect = event.getEffectInstance();
+            MobEffect type = effect.getEffect().value();
+            if (type.getCategory().equals(MobEffectCategory.HARMFUL) && !effect.getEffect().is(SinewMobEffectTags.IMMUNE_TO_DURATION_REDUCTION)) {
+                SinewMobEffectUtils.shortenEffect(effect, entity, Math.round(effect.getDuration() * -attributeValue));
             }
         }
     }
@@ -151,13 +185,13 @@ public class CommonEvents {
         Level level = target.level();
         DamageSource source = event.getSource();
 
-        // life steal
+        // lifesteal
         if (source.getEntity() instanceof LivingEntity attacker
                 && attacker != target
                 && !source.is(SinewDamageTypeTags.DOES_NOT_LIFESTEAL)
                 && !target.getType().is(SinewEntityTags.BLOCK_LIFESTEAL)
-                && attacker.getAttribute(SinewAttributes.LIFE_STEAL) != null) {
-            float lifeSteal = (float) attacker.getAttributeValue(SinewAttributes.LIFE_STEAL);
+                && attacker.getAttribute(SinewAttributes.LIFESTEAL) != null) {
+            float lifeSteal = (float) attacker.getAttributeValue(SinewAttributes.LIFESTEAL);
             float damageDealt = event.getNewDamage();
             if (lifeSteal > 0.0F && damageDealt > 0.0F && attacker.isAlive()) {
                 attacker.heal(damageDealt * lifeSteal);

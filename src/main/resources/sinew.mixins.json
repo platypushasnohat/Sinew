@@ -25,6 +25,7 @@
     "client.ItemInHandLayerMixin",
     "client.ItemInHandRendererMixin",
     "client.LivingEntityRendererMixin",
+    "client.LocalPlayerMixin",
     "client.SoundEngineAccessor",
     "client.SoundManagerAccessor"
   ],
