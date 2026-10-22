@@ -24,8 +24,8 @@ public class SinewItemUtils {
 
     public static boolean shouldConsumeAmmo(LivingEntity shooter, ItemStack weapon) {
         boolean consume = true;
-        if (shooter != null && shooter.getAttribute(SinewAttributes.AMMO_SAVE_CHANCE) != null) {
-            double saveChance = shooter.getAttributeValue(SinewAttributes.AMMO_SAVE_CHANCE);
+        if (shooter != null && shooter.getAttribute(SinewAttributes.AMMO_CONSERVATION) != null) {
+            double saveChance = shooter.getAttributeValue(SinewAttributes.AMMO_CONSERVATION);
             consume = saveChance <= 0.0D || shooter.getRandom().nextDouble() >= saveChance;
         }
         return consume;

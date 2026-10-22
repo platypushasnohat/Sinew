@@ -52,19 +52,23 @@ public abstract class AnimatedItemModel<I extends Item> extends Model {
         return name.equals("root") ? Optional.of(this.root()) : this.root().getAllParts().filter((part) -> part.hasChild(name)).findFirst().map((part) -> part.getChild(name));
     }
 
+    @Deprecated
     protected void animate(Entity entity, ItemAnimationState animationState, AnimationDefinition animationDefinition, float ageInTicks) {
         this.animate(entity, animationState, animationDefinition, ageInTicks, 1.0F);
     }
 
+    @Deprecated
     protected void animate(Entity entity, ItemAnimationState animationState, AnimationHolder animation, float ageInTicks) {
         this.animate(entity, animationState, animation.get(), ageInTicks);
     }
 
+    @Deprecated
     protected void animate(Entity entity, ItemAnimationState animationState, AnimationDefinition animationDefinition, float ageInTicks, float speed) {
         animationState.updateTime(ageInTicks, speed);
         animationState.ifStarted((state) -> ItemKeyframeAnimations.animate(this, animationDefinition, state.getAccumulatedTime(), 1.0F, ANIMATION_VECTOR_CACHE));
     }
 
+    @Deprecated
     protected void animate(Entity entity, ItemAnimationState animationState, AnimationHolder animation, float ageInTicks, float speed) {
         this.animate(entity, animationState, animation.get(), ageInTicks, speed);
     }

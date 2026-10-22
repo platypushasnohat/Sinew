@@ -9,6 +9,7 @@ import com.platypushasnohat.sinew.network.ParticlePacket;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDataComponents;
 import com.platypushasnohat.sinew.registry.SinewEnchantmentEffects;
+import com.platypushasnohat.sinew.registry.SinewLootModifierTypes;
 import com.platypushasnohat.sinew.utils.SinewClientProxy;
 import com.platypushasnohat.sinew.utils.SinewCommonProxy;
 import net.minecraft.resources.ResourceLocation;
@@ -44,6 +45,7 @@ public class Sinew {
         SinewDataComponents.DATA_COMPONENTS.register(modEventBus);
         SinewEnchantmentEffects.ENTITY_EFFECTS.register(modEventBus);
         SinewEnchantmentEffects.LOCATION_EFFECTS.register(modEventBus);
+        SinewLootModifierTypes.LOOT_MODIFIERS.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::packetSetup);
         modContainer.registerConfig(ModConfig.Type.COMMON, SinewConfig.COMMON_CONFIG, "sinew-common.toml");
@@ -52,7 +54,7 @@ public class Sinew {
     public void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             if (SinewConfig.RESISTANCE_USES_DAMAGE_REDUCTION.get()) {
-                MobEffects.DAMAGE_RESISTANCE.value().addAttributeModifier(SinewAttributes.DAMAGE_REDUCTION, location("effect.resistance"), 0.2D, AttributeModifier.Operation.ADD_VALUE);
+                MobEffects.DAMAGE_RESISTANCE.value().addAttributeModifier(SinewAttributes.DAMAGE_RESISTANCE, location("effect.resistance"), 0.2D, AttributeModifier.Operation.ADD_VALUE);
             }
         });
     }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class ProjectileWeaponItemMixin {
 
     @ModifyExpressionValue(method = "useAmmo", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;processAmmoUse(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;I)I"))
-    private static int sinew$ammoSaveChance(int ammoUse, ItemStack weapon, ItemStack ammo, LivingEntity shooter, boolean intangible) {
+    private static int sinew$useAmmo(int ammoUse, ItemStack weapon, ItemStack ammo, LivingEntity shooter, boolean intangible) {
         return ammoUse > 0 && !SinewItemUtils.shouldConsumeAmmo(shooter, weapon) ? 0 : ammoUse;
     }
 }

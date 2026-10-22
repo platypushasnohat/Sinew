@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:bad_omen",
+    "minecraft:trial_omen",
+    "minecraft:raid_omen",
+    "minecraft:oozing",
+    "minecraft:infested",
+    "minecraft:weaving",
+    "minecraft:wind_charged",
+    "minecraft:darkness"
+  ]
+}

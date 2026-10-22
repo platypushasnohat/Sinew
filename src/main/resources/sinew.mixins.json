@@ -22,6 +22,7 @@
     "client.HumanoidModelMixin",
     "client.ItemInHandLayerMixin",
     "client.ItemInHandRendererMixin",
+    "client.LocalPlayerMixin",
     "client.SoundEngineAccessor",
     "client.SoundManagerAccessor"
   ],
