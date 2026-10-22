@@ -163,7 +163,7 @@ public class CommonEvents {
             MobEffectInstance effect = event.getEffectInstance();
             MobEffect type = effect.getEffect().value();
             if (type.getCategory().equals(MobEffectCategory.HARMFUL) && !effect.getEffect().is(SinewMobEffectTags.IMMUNE_TO_DURATION_REDUCTION)) {
-                SinewMobEffectUtils.shortenEffect(effect, entity, Math.round(effect.getDuration() * attributeValue));
+                SinewMobEffectUtils.shortenEffect(effect, entity, Math.round(effect.getDuration() * -attributeValue));
             }
         }
     }

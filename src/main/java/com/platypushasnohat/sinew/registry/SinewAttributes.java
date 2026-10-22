@@ -28,7 +28,7 @@ public class SinewAttributes {
     public static final DeferredHolder<Attribute, Attribute> MAGIC_RESISTANCE = registerPercentage("magic_resistance", 0.0D, 0.0D, 1.0D);
     public static final DeferredHolder<Attribute, Attribute> FIRE_RESISTANCE = registerPercentage("fire_resistance", 0.0D, 0.0D, 1.0D);
     public static final DeferredHolder<Attribute, Attribute> PROJECTILE_RESISTANCE = registerPercentage("projectile_resistance", 0.0D, 0.0D, 1.0D);
-    public static final DeferredHolder<Attribute, Attribute> NEGATIVE_EFFECT_DURATION = registerPercentageNegative("negative_effect_duration", 0.0D, 0.0D, 1.0D);
+    public static final DeferredHolder<Attribute, Attribute> NEGATIVE_EFFECT_DURATION = registerPercentageNegative("negative_effect_duration", 0.0D, -1024.0D, 1024.0D);
 
     @SuppressWarnings("SameParameterValue")
     private static DeferredHolder<Attribute, Attribute> register(String name, double defaultValue, double minimumValue, double maximumValue) {
