@@ -14,6 +14,7 @@ import com.platypushasnohat.sinew.utils.SinewMobEffectUtils;
 import com.platypushasnohat.sinew.utils.SinewSoundUtils;
 import com.platypushasnohat.sinew.world.SinewWorldData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -113,13 +114,17 @@ public class CommonEvents {
     @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity target = event.getEntity();
+        Level level = target.level();
         DamageSource source = event.getSource();
 
         // dodge
-        if (!(event.getSource().is(SinewDamageTypeTags.BYPASSES_DODGE) || target.getAttribute(SinewAttributes.DODGE_CHANCE) == null)) {
+        if (!(source.is(SinewDamageTypeTags.BYPASSES_DODGE) || target.getAttribute(SinewAttributes.DODGE_CHANCE) == null)) {
             double dodgeChance = target.getAttributeValue(SinewAttributes.DODGE_CHANCE);
             if (dodgeChance > 0.0D && target.getRandom().nextDouble() < dodgeChance) {
-                target.level().playSound(null, target.blockPosition(), SoundEvents.EGG_THROW, target.getSoundSource(), 0.3F, SinewSoundUtils.randomizePitch(target.level()));
+                if (level instanceof ServerLevel serverLevel) {
+                    serverLevel.sendParticles(ParticleTypes.POOF, target.getX(), target.getY(0.5D), target.getZ(), 10, 0.3D, 0.5D, 0.3D, 0.05D);
+                }
+                level.playSound(null, target.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, target.getSoundSource(), 0.5F, SinewSoundUtils.randomizePitch(target));
                 event.setCanceled(true);
             }
         }
