@@ -87,8 +87,9 @@ public class CommonEvents {
         boolean validSpawn = event.getSpawnType() != MobSpawnType.COMMAND && event.getSpawnType() != MobSpawnType.BUCKET && event.getSpawnType() != MobSpawnType.SPAWN_EGG && event.getSpawnType() != MobSpawnType.DISPENSER;
         if (SinewConfig.ENABLE_PROGRESSION.get() && !event.isCanceled()) {
             if (validSpawn && level instanceof ServerLevel serverLevel) {
-                boolean netherEntered = SinewWorldData.get(serverLevel).hasNetherBeenEnteredBefore();
-                boolean postDragon = serverLevel.getServer().getWorldData().endDragonFightData().dragonKilled() || serverLevel.getServer().getWorldData().endDragonFightData().previouslyKilled();
+                SinewWorldData worldData = SinewWorldData.get(serverLevel);
+                boolean netherEntered = worldData.hasNetherBeenEnteredBefore();
+                boolean postDragon = worldData.hasDragonBeenKilledBefore();
                 if (entity.getType().is(SinewEntityTags.POST_NETHER_SPAWNS) && !netherEntered) {
                     event.setSpawnCancelled(true);
                     event.setCanceled(true);
