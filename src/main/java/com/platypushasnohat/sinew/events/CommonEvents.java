@@ -3,6 +3,7 @@ package com.platypushasnohat.sinew.events;
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.entity.base.TamableMonster;
+import com.platypushasnohat.sinew.entity.utils.SplitMagicBonus;
 import com.platypushasnohat.sinew.entity.utils.SplitProjectileBonus;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDamageTypes;
@@ -61,6 +62,7 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.FORTUNE);
             event.add(entityType, SinewAttributes.LOOTING);
             event.add(entityType, SinewAttributes.AMMO_SAVE_CHANCE);
+            event.add(entityType, SinewAttributes.MANA_CONSERVE_CHANCE);
         });
     }
 
@@ -180,6 +182,9 @@ public class CommonEvents {
                     if (!source.is(SinewDamageTypeTags.IGNORES_ATTACK_COOLDOWN_SCALING)) {
                         magicDamage *= player.getAttackStrengthScale(0);
                     }
+                }
+                if (source.getDirectEntity() instanceof SplitMagicBonus split) {
+                    magicDamage /= Math.max(split.getMagicCount(), 1);
                 }
                 if (magicDamage > 0.0F) {
                     target.invulnerableTime = 0;

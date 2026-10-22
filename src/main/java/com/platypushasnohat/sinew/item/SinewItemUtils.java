@@ -40,4 +40,13 @@ public class SinewItemUtils {
         }
         return consumed;
     }
+
+    public static boolean shouldConsumeMana(LivingEntity caster, ItemStack weapon) {
+        boolean consume = true;
+        if (caster != null && caster.getAttribute(SinewAttributes.MANA_CONSERVE_CHANCE) != null) {
+            double conserveChance = caster.getAttributeValue(SinewAttributes.MANA_CONSERVE_CHANCE);
+            consume = conserveChance <= 0.0D || caster.getRandom().nextDouble() >= conserveChance;
+        }
+        return consume;
+    }
 }

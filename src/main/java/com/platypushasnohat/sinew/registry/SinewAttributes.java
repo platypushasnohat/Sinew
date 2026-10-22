@@ -25,6 +25,7 @@ public class SinewAttributes {
     public static final DeferredHolder<Attribute, Attribute> FORTUNE = register("fortune", 0.0D, 0.0D, 1024.0D);
     public static final DeferredHolder<Attribute, Attribute> LOOTING = register("looting", 0.0D, 0.0D, 1024.0D);
     public static final DeferredHolder<Attribute, Attribute> AMMO_SAVE_CHANCE = registerPercentage("ammo_save_chance", 0.0D, 0.0D, 1.0D);
+    public static final DeferredHolder<Attribute, Attribute> MANA_CONSERVE_CHANCE = registerPercentage("mana_conserve_chance", 0.0D, 0.0D, 1.0D);
 
     @SuppressWarnings("SameParameterValue")
     private static DeferredHolder<Attribute, Attribute> register(String name, double defaultValue, double minimumValue, double maximumValue) {
