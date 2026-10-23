@@ -8,6 +8,7 @@
     "BrushItemMixin",
     "EnchantedCountIncreaseFunctionMixin",
     "EnchantmentHelperMixin",
+    "EntityMixin",
     "LandRandomPosMixin",
     "LivingEntityMixin",
     "PlayerMixin",
@@ -18,10 +19,12 @@
     "TamableAnimalMixin"
   ],
   "client": [
+    "client.EntityRenderDispatcherMixin",
     "client.GuiAccessor",
     "client.HumanoidModelMixin",
     "client.ItemInHandLayerMixin",
     "client.ItemInHandRendererMixin",
+    "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.SoundEngineAccessor",
     "client.SoundManagerAccessor"

@@ -16,8 +16,14 @@
   "attribute.sinew.name.generic.fire_resistance": "Fire Resistance",
   "attribute.sinew.name.generic.projectile_resistance": "Projectile Resistance",
   "attribute.sinew.name.generic.negative_effect_duration": "Negative Effect Duration",
+  "attribute.sinew.name.generic.ammo_save_chance": "Chance to Save Ammo",
+  "attribute.sinew.name.generic.mana_conserve_chance": "Chance to Conserve Mana",
   "entity.sinew.all.command_0": "Invalid Command",
   "entity.sinew.all.command_1": "%s is staying",
   "entity.sinew.all.command_2": "%s is following",
-  "entity.sinew.all.command_3": "%s is wandering"
+  "entity.sinew.all.command_3": "%s is wandering",
+  "entity.sinew.spectral_test_zombie": "Spectral Test Zombie",
+  "entity.sinew.spectral_test_visible_zombie": "Visible Spectral Test Zombie",
+  "entity.sinew.spectral_blind_wolf": "Spectral Blind Wolf",
+  "entity.sinew.spectral_test_audible_zombie": "Audible Spectral Test Zombie"
 }

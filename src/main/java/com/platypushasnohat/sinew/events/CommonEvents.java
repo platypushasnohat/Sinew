@@ -3,6 +3,7 @@ package com.platypushasnohat.sinew.events;
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.entity.base.TamableMonster;
+import com.platypushasnohat.sinew.entity.utils.SplitMagicBonus;
 import com.platypushasnohat.sinew.entity.utils.SplitProjectileBonus;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
 import com.platypushasnohat.sinew.registry.SinewDamageTypes;
@@ -28,6 +29,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -40,11 +42,13 @@ import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
 import java.util.List;
 
@@ -71,6 +75,8 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.PROJECTILE_RESISTANCE);
             event.add(entityType, SinewAttributes.FIRE_RESISTANCE);
             event.add(entityType, SinewAttributes.NEGATIVE_EFFECT_DURATION);
+            event.add(entityType, SinewAttributes.AMMO_SAVE_CHANCE);
+            event.add(entityType, SinewAttributes.MANA_CONSERVE_CHANCE);
         });
     }
 
@@ -81,8 +87,9 @@ public class CommonEvents {
         boolean validSpawn = event.getSpawnType() != MobSpawnType.COMMAND && event.getSpawnType() != MobSpawnType.BUCKET && event.getSpawnType() != MobSpawnType.SPAWN_EGG && event.getSpawnType() != MobSpawnType.DISPENSER;
         if (SinewConfig.ENABLE_PROGRESSION.get() && !event.isCanceled()) {
             if (validSpawn && level instanceof ServerLevel serverLevel) {
-                boolean netherEntered = SinewWorldData.get(serverLevel).hasNetherBeenEnteredBefore();
-                boolean postDragon = serverLevel.getServer().getWorldData().endDragonFightData().dragonKilled() || serverLevel.getServer().getWorldData().endDragonFightData().previouslyKilled();
+                SinewWorldData worldData = SinewWorldData.get(serverLevel);
+                boolean netherEntered = worldData.hasNetherBeenEnteredBefore();
+                boolean postDragon = worldData.hasDragonBeenKilledBefore();
                 if (entity.getType().is(SinewEntityTags.POST_NETHER_SPAWNS) && !netherEntered) {
                     event.setSpawnCancelled(true);
                     event.setCanceled(true);
@@ -211,6 +218,9 @@ public class CommonEvents {
                         magicDamage *= player.getAttackStrengthScale(0);
                     }
                 }
+                if (source.getDirectEntity() instanceof SplitMagicBonus split) {
+                    magicDamage /= Math.max(split.getMagicCount(), 1);
+                }
                 if (magicDamage > 0.0F) {
                     target.invulnerableTime = 0;
                     target.hurt(SinewDamageTypes.causeMagicDamage(level.registryAccess(), attacker, source), magicDamage);
@@ -242,6 +252,26 @@ public class CommonEvents {
             if (!list.isEmpty()) {
                 event.setProblem(Player.BedSleepingProblem.NOT_SAFE);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeath(LivingDeathEvent event) {
+        if (event.getEntity() instanceof EnderDragon dragon && dragon.level() instanceof ServerLevel serverLevel) {
+            SinewWorldData worldData = SinewWorldData.get(serverLevel);
+            if (!worldData.hasDragonBeenKilledBefore()) {
+                Sinew.LOGGER.info("End progression has been enabled");
+                worldData.setHasDragonBeenKilledBefore(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onServerStarted(ServerStartedEvent event) {
+        SinewWorldData worldData = SinewWorldData.get(event.getServer().overworld());
+        if (!worldData.isDragonFlagInitialized()) {
+            boolean dragonKilled = event.getServer().getWorldData().endDragonFightData().dragonKilled() || event.getServer().getWorldData().endDragonFightData().previouslyKilled();
+            worldData.setHasDragonBeenKilledBefore(dragonKilled);
         }
     }
 }
