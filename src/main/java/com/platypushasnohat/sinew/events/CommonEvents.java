@@ -28,6 +28,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.player.Player;
@@ -40,11 +41,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
@@ -272,6 +269,20 @@ public class CommonEvents {
         if (!worldData.isDragonFlagInitialized()) {
             boolean dragonKilled = event.getServer().getWorldData().endDragonFightData().dragonKilled() || event.getServer().getWorldData().endDragonFightData().previouslyKilled();
             worldData.setHasDragonBeenKilledBefore(dragonKilled);
+        }
+    }
+
+    //iron golem band aid
+    @SubscribeEvent
+    public static void onLivingChangeTarget(LivingChangeTargetEvent event) {
+        LivingEntity attacker = event.getEntity();
+        if (event.getNewAboutToBeSetTarget() instanceof TamableMonster monster
+                && monster.isTame()
+                && !(attacker instanceof OwnableEntity ownable && ownable.getOwnerUUID() != null)
+                && attacker.getLastHurtByMob() != monster
+                && monster.getLastHurtMob() != attacker
+                && monster.getTarget() != attacker) {
+            event.setCanceled(true);
         }
     }
 }
