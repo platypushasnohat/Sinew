@@ -19,7 +19,7 @@ public abstract class SinewEntityModel<E extends Entity> extends HierarchicalMod
 
     private static final Vector3f ANIMATION_VECTOR_CACHE = new Vector3f();
     protected static final float IDLE_FADE_SCALE = 2.5F;
-    protected static final float ACTIVE_THRESHOLD = 0.05F;
+    protected static final float ACTIVE_THRESHOLD = 0.01F;
 
     public SinewEntityModel() {
         super();

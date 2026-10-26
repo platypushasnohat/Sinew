@@ -63,23 +63,23 @@ public class BodyChain {
         return this.renderYaw;
     }
 
-    public float getRenderYaw(float partialTick) {
-        return Mth.rotLerp(partialTick, this.prevRenderYaw, this.renderYaw);
+    public float getRenderYaw(float partialTicks) {
+        return Mth.rotLerp(partialTicks, this.prevRenderYaw, this.renderYaw);
     }
 
-    public float getRoll(float partialTick) {
-        return Mth.lerp(partialTick, this.prevRoll, this.roll);
+    public float getRoll(float partialTicks) {
+        return Mth.lerp(partialTicks, this.prevRoll, this.roll);
     }
 
-    public float getSegmentYawOffset(int index, float partialTick) {
-        float current = Mth.rotLerp(partialTick, this.prevSegmentYaw[index], this.segmentYaw[index]);
-        float reference = index <= 1 ? this.getRenderYaw(partialTick) : Mth.rotLerp(partialTick, this.prevSegmentYaw[index - 1], this.segmentYaw[index - 1]);
+    public float getSegmentYawOffset(int index, float partialTicks) {
+        float current = Mth.rotLerp(partialTicks, this.prevSegmentYaw[index], this.segmentYaw[index]);
+        float reference = index <= 1 ? this.getRenderYaw(partialTicks) : Mth.rotLerp(partialTicks, this.prevSegmentYaw[index - 1], this.segmentYaw[index - 1]);
         return Mth.wrapDegrees(current - reference);
     }
 
-    public float getSegmentPitchOffset(int index, float partialTick, float bodyPitch) {
-        float current = Mth.lerp(partialTick, this.prevSegmentPitch[index], this.segmentPitch[index]);
-        float reference = index <= 1 ? bodyPitch : Mth.lerp(partialTick, this.prevSegmentPitch[index - 1], this.segmentPitch[index - 1]);
+    public float getSegmentPitchOffset(int index, float partialTicks, float bodyPitch) {
+        float current = Mth.lerp(partialTicks, this.prevSegmentPitch[index], this.segmentPitch[index]);
+        float reference = index <= 1 ? bodyPitch : Mth.lerp(partialTicks, this.prevSegmentPitch[index - 1], this.segmentPitch[index - 1]);
         return current - reference;
     }
 }
