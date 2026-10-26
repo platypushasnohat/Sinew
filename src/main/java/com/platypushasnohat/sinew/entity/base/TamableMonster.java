@@ -20,6 +20,7 @@ import net.minecraft.world.level.pathfinder.PathType;
 import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public abstract class TamableMonster extends AnimatedTamableAnimal implements Enemy {
@@ -54,6 +55,20 @@ public abstract class TamableMonster extends AnimatedTamableAnimal implements En
         if (f > 0.5F) {
             this.noActionTime += 2;
         }
+    }
+
+    @Override
+    public boolean isAlliedTo(Entity entity) {
+        return this.isSameOwner(entity) || super.isAlliedTo(entity);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        return !this.isSameOwner(source.getEntity()) && super.hurt(source, amount);
+    }
+
+    public boolean isSameOwner(@Nullable Entity entity) {
+        return entity != this && this.isTame() && entity instanceof TamableAnimal tamable && tamable.isTame() && Objects.equals(tamable.getOwnerUUID(), this.getOwnerUUID());
     }
 
     @Override

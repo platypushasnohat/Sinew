@@ -2,6 +2,7 @@ package com.platypushasnohat.sinew.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.platypushasnohat.sinew.config.SinewConfig;
+import com.platypushasnohat.sinew.entity.spectral.SpectralSight;
 import com.platypushasnohat.sinew.tags.SinewDamageTypeTags;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
@@ -40,5 +42,14 @@ public abstract class LivingEntityMixin {
     @ModifyExpressionValue(method = "getDamageAfterMagicAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z"))
     private boolean sinew$getDamageAfterMagicAbsorb(boolean hasEffect) {
         return hasEffect && !SinewConfig.RESISTANCE_USES_DAMAGE_REDUCTION.get();
+    }
+
+    //overrides isPickable. check in EntityMixin doesn't reach mobs
+    //used by: Roamer + Ghost + Icicat + Envoy + Sovereign
+    @Inject(method = "isPickable", at = @At(value = "HEAD"), cancellable = true)
+    private void sinew$unpickableSpectral(CallbackInfoReturnable<Boolean> cir) {
+        if (SpectralSight.isIntangibleOnClient((LivingEntity) (Object) this)) {
+            cir.setReturnValue(false);
+        }
     }
 }
