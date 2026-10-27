@@ -68,6 +68,8 @@ public class Sinew {
 
         registrar.playToServer(MultipartEntityPacket.TYPE, MultipartEntityPacket.CODEC, MultipartEntityPacket::handle);
         registrar.playToServer(MountedEntityKeyPacket.TYPE, MountedEntityKeyPacket.CODEC, MountedEntityKeyPacket::handle);
+
+        registrar.playBidirectional(SupporterCapePacket.TYPE, SupporterCapePacket.CODEC, SupporterCapePacket::handle);
     }
 
     public static <T> T unsafeRunForDist(Supplier<Supplier<T>> clientTarget, Supplier<Supplier<T>> serverTarget) {

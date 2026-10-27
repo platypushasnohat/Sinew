@@ -19,6 +19,7 @@
     "TamableAnimalMixin"
   ],
   "client": [
+    "client.AbstractClientPlayerMixin",
     "client.EntityRenderDispatcherMixin",
     "client.GuiAccessor",
     "client.HumanoidModelMixin",
@@ -26,6 +27,7 @@
     "client.ItemInHandRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
+    "client.SkinCustomizationScreenMixin",
     "client.SoundEngineAccessor",
     "client.SoundManagerAccessor"
   ],
