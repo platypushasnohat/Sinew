@@ -39,4 +39,13 @@ public class SupporterList {
             UUID.fromString("befc934f-f684-4049-8f47-7b5a3727dbc6"), //PCAwesomeness
             UUID.fromString("0f09f366-7ea3-4c6b-a8ac-c1a73ef6100e")  //leekl0l
     );
+
+    //tarantula cape
+    public static final Set<UUID> TARANTULA = Set.of(
+            UUID.fromString("380df991-f603-344c-a090-369bad2a924a"), //Dev
+            UUID.fromString("3562ab33-f01b-4801-aab5-807f3750ded1"), //AbysswalkerDeno
+            UUID.fromString("97399daf-aecd-45c9-a6f2-c18e9c9b18a2"), //platypushasnohat
+            UUID.fromString("142543af-76fe-45d9-8d53-8f169c86ec64"), //Peeko32213
+            UUID.fromString("3e11a940-8aff-449c-80d1-fc0f427f4876")  //DarkRubs_
+    );
 }

@@ -27,5 +27,7 @@
   "entity.sinew.spectral_blind_wolf": "Spectral Blind Wolf",
   "entity.sinew.spectral_test_audible_zombie": "Audible Spectral Test Zombie",
 
-  "options.sinew.supporterCape": "Supporter Cape"
+  "options.sinew.supporterCape": "Supporter Cape",
+  "options.sinew.supporterCape.supporter": "Supporter",
+  "options.sinew.supporterCape.tarantula": "Tarantula"
 }

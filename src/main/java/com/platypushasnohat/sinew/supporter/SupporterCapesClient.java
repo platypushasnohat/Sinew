@@ -15,77 +15,77 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventBusSubscriber(modid = Sinew.MOD_ID, value = Dist.CLIENT)
 public class SupporterCapesClient {
 
-    private static final Set<UUID> ENABLED_PLAYERS = ConcurrentHashMap.newKeySet();
+    private static final Map<UUID, SupporterCape> PLAYER_CAPES = new ConcurrentHashMap<>();
 
     private static final String TOGGLE_FILE = "sinew_supporter_cape.txt";
 
-    private static Boolean enabled;
+    private static SupporterCape selected;
 
-    public static boolean shouldShowCape(Player player) {
-        boolean enabled = player.isLocalPlayer() ? isEnabled() : ENABLED_PLAYERS.contains(player.getUUID());
-        return enabled && SupporterCapes.isSupporter(player.getUUID());
+    public static SupporterCape getShownCape(Player player) {
+        SupporterCape cape = player.isLocalPlayer() ? getSelected() : PLAYER_CAPES.getOrDefault(player.getUUID(), SupporterCape.NONE);
+        return cape.canUse(player.getUUID()) ? cape : SupporterCape.NONE;
     }
 
-    public static boolean isLocalSupporter() {
-        return SupporterCapes.isSupporter(Minecraft.getInstance().getUser().getProfileId());
+    public static UUID getLocalUUID() {
+        return Minecraft.getInstance().getUser().getProfileId();
     }
 
-    public static boolean isEnabled() {
-        if (enabled == null) {
-            enabled = loadEnabled();
+    public static List<SupporterCape> getAvailable() {
+        return SupporterCape.getAvailable(getLocalUUID());
+    }
+
+    public static SupporterCape getSelected() {
+        if (selected == null) {
+            selected = loadSelected();
         }
-        return enabled;
+        return selected;
     }
 
-    public static void setEnabled(boolean value) {
-        enabled = value;
+    public static void setSelected(SupporterCape cape) {
+        selected = cape;
         try {
-            Files.writeString(getToggleFile(), Boolean.toString(value), StandardCharsets.UTF_8);
+            Files.writeString(getToggleFile(), cape.getSerializedName(), StandardCharsets.UTF_8);
         }
         catch (IOException exception) {
-            Sinew.LOGGER.error("Failed to save supporter cape toggle", exception);
+            Sinew.LOGGER.error("Failed to save supporter cape", exception);
         }
         sendToServer();
     }
 
-    private static boolean loadEnabled() {
-        boolean value = false;
+    private static SupporterCape loadSelected() {
+        SupporterCape cape = SupporterCape.NONE;
         Path file = getToggleFile();
         if (Files.exists(file)) {
             try {
-                value = Boolean.parseBoolean(Files.readString(file, StandardCharsets.UTF_8).trim());
+                cape = SupporterCape.byName(Files.readString(file, StandardCharsets.UTF_8).trim());
             }
             catch (IOException exception) {
-                Sinew.LOGGER.error("Failed to read supporter cape toggle", exception);
+                Sinew.LOGGER.error("Failed to read supporter cape", exception);
             }
         }
-        return value;
+        return cape;
     }
 
     private static Path getToggleFile() {
         return Minecraft.getInstance().gameDirectory.toPath().resolve(TOGGLE_FILE);
     }
 
-    public static void setOtherEnabled(UUID player, boolean enabled) {
-        if (enabled) {
-            ENABLED_PLAYERS.add(player);
-        }
-        else {
-            ENABLED_PLAYERS.remove(player);
-        }
+    public static void setOtherCape(UUID player, SupporterCape cape) {
+        PLAYER_CAPES.put(player, cape);
     }
 
     private static void sendToServer() {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
-        if (connection != null && connection.hasChannel(SupporterCapePacket.TYPE) && isLocalSupporter()) {
-            PacketDistributor.sendToServer(new SupporterCapePacket(Minecraft.getInstance().getUser().getProfileId(), isEnabled()));
+        if (connection != null && connection.hasChannel(SupporterCapePacket.TYPE) && SupporterCapes.isSupporter(getLocalUUID())) {
+            PacketDistributor.sendToServer(new SupporterCapePacket(getLocalUUID(), getSelected()));
         }
     }
 
@@ -96,6 +96,6 @@ public class SupporterCapesClient {
 
     @SubscribeEvent
     public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
-        ENABLED_PLAYERS.clear();
+        PLAYER_CAPES.clear();
     }
 }

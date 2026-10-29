@@ -1,8 +1,8 @@
 package com.platypushasnohat.sinew.registry;
 
-import com.mojang.serialization.Codec;
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.entity.spectral.SpectralSight;
+import com.platypushasnohat.sinew.supporter.SupporterCape;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -15,5 +15,5 @@ public class SinewAttachments {
     //sources arent saved
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<SpectralSight>> SPECTRAL_SIGHT = ATTACHMENT_TYPES.register("spectral_sight", () -> AttachmentType.builder(() -> new SpectralSight()).build());
 
-    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> SUPPORTER_CAPE = ATTACHMENT_TYPES.register("supporter_cape", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).copyOnDeath().build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<SupporterCape>> SUPPORTER_CAPE = ATTACHMENT_TYPES.register("selected_supporter_cape", () -> AttachmentType.builder(() -> SupporterCape.NONE).serialize(SupporterCape.CODEC).copyOnDeath().build());
 }
