@@ -20,7 +20,8 @@ public class SupporterList {
             UUID.fromString("b0f6689a-b1a3-4830-887b-ec31862861d7"), //ChipsTheCat
             UUID.fromString("053de6af-392b-4385-90c5-34395b7e8757"), //Indomi950
             UUID.fromString("2cb92e6d-1927-4ca6-84d4-d46f693a7b39"), //Slimesmc
-            UUID.fromString("4612ba26-8a8e-4586-9fb3-21b36b921190")  //XVtheawesome4
+            UUID.fromString("4612ba26-8a8e-4586-9fb3-21b36b921190"), //XVtheawesome4
+            UUID.fromString("44d61b0b-e43b-469b-aac3-99274ed48f9b")  //Temo5886
     );
 
     //supporter
