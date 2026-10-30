@@ -60,11 +60,11 @@ public abstract class AnimatedMonster extends Monster implements AnimatedEntity 
     }
 
     public static boolean checkUndergroundMonsterSpawnRules(EntityType<? extends Mob> monster, ServerLevelAccessor level, MobSpawnType reason, BlockPos pos, RandomSource random) {
-        return level.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawnNoSkylight(level, pos, random) && checkMobSpawnRules(monster, level, reason, pos, random);
+        return level.getDifficulty() != Difficulty.PEACEFUL && (MobSpawnType.ignoresLightRequirements(reason) || isDarkEnoughToSpawnNoSkylight(level, pos, random)) && checkMobSpawnRules(monster, level, reason, pos, random);
     }
 
     public static boolean checkSurfaceMonsterSpawnRules(EntityType<? extends Mob> monster, ServerLevelAccessor level, MobSpawnType reason, BlockPos pos, RandomSource random) {
-        return level.getDifficulty() != Difficulty.PEACEFUL && isDarkEnoughToSpawnRequireSkylight(level, pos, random) && checkMobSpawnRules(monster, level, reason, pos, random);
+        return level.getDifficulty() != Difficulty.PEACEFUL && (MobSpawnType.ignoresLightRequirements(reason) || isDarkEnoughToSpawnRequireSkylight(level, pos, random)) && checkMobSpawnRules(monster, level, reason, pos, random);
     }
 
     public static boolean isDarkEnoughToSpawnNoSkylight(ServerLevelAccessor level, BlockPos pos, RandomSource random) {
