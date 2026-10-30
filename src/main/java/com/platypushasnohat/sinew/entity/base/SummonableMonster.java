@@ -10,9 +10,11 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -41,6 +43,7 @@ public abstract class SummonableMonster extends TamableMonster {
     private float summonDamage;
     @Nullable
     private UUID trackedOwner;
+    private boolean silentDeath;
 
     protected SummonableMonster(EntityType<? extends SummonableMonster> entityType, Level level) {
         super(entityType, level);
@@ -74,7 +77,7 @@ public abstract class SummonableMonster extends TamableMonster {
     }
 
     public static boolean hasMinionSlots(Player owner, double cost) {
-        return cost <= 0.0D || getUsedMinionSlots(owner.getUUID()) + cost <= getMaxMinionSlots(owner);
+        return cost <= 0.0D || getUsedMinionSlots(owner.getUUID()) + cost <= getMaxMinionSlots(owner) + 1.0E-6D;
     }
 
     public static double getSummonStat(Player owner, ItemStack weapon, InteractionHand hand, Holder<Attribute> attribute) {
@@ -105,6 +108,19 @@ public abstract class SummonableMonster extends TamableMonster {
     }
 
     protected void onSummoned(Player owner) {
+    }
+
+    @Override
+    public void die(DamageSource source) {
+        this.silentDeath = this.isSummoned();
+        super.die(source);
+        this.silentDeath = false;
+    }
+
+    @Override
+    @Nullable
+    public LivingEntity getOwner() {
+        return this.silentDeath ? null : super.getOwner();
     }
 
     public float getSummonCost() {
