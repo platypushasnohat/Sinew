@@ -2,8 +2,10 @@ package com.platypushasnohat.sinew.events;
 
 import com.platypushasnohat.sinew.Sinew;
 import com.platypushasnohat.sinew.client.render.CustomPlayerRidePose;
+import com.platypushasnohat.sinew.entity.base.SummonableMount;
 import com.platypushasnohat.sinew.events.custom.PlayerPoseEvent;
 import com.platypushasnohat.sinew.item.SkinLayerHidingArmorItem;
+import com.platypushasnohat.sinew.network.MountedEntityKeyPacket;
 import com.platypushasnohat.sinew.utils.SinewClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -14,9 +16,11 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = Sinew.MOD_ID, value = Dist.CLIENT)
 public class ClientEvents {
@@ -63,6 +67,15 @@ public class ClientEvents {
         if (player.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof SkinLayerHidingArmorItem) {
             model.leftPants.visible = false;
             model.rightPants.visible = false;
+        }
+    }
+
+    @SubscribeEvent
+    public static void onInteractionKey(InputEvent.InteractionKeyMappingTriggered event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (event.isAttack() && minecraft.player != null && minecraft.player.getVehicle() instanceof SummonableMount mount && mount.getControllingPassenger() == minecraft.player && mount.acceptsRiderKey(SummonableMount.RIDER_ATTACK)) {
+            PacketDistributor.sendToServer(new MountedEntityKeyPacket(mount.getId(), minecraft.player.getId(), SummonableMount.RIDER_ATTACK));
+            event.setCanceled(true);
         }
     }
 }

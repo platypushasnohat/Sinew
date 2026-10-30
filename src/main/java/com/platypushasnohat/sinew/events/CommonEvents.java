@@ -74,6 +74,9 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.NEGATIVE_EFFECT_DURATION);
             event.add(entityType, SinewAttributes.AMMO_SAVE_CHANCE);
             event.add(entityType, SinewAttributes.MANA_CONSERVE_CHANCE);
+            event.add(entityType, SinewAttributes.SUMMON_DAMAGE);
+            event.add(entityType, SinewAttributes.SUMMON_DURATION);
+            event.add(entityType, SinewAttributes.MINION_SLOTS);
         });
     }
 
@@ -81,7 +84,7 @@ public class CommonEvents {
     public static void onFinalizeSpawn(FinalizeSpawnEvent event) {
         LivingEntity entity = event.getEntity();
         LevelAccessor level = event.getLevel();
-        boolean validSpawn = event.getSpawnType() != MobSpawnType.COMMAND && event.getSpawnType() != MobSpawnType.BUCKET && event.getSpawnType() != MobSpawnType.SPAWN_EGG && event.getSpawnType() != MobSpawnType.DISPENSER;
+        boolean validSpawn = event.getSpawnType() != MobSpawnType.COMMAND && event.getSpawnType() != MobSpawnType.BUCKET && event.getSpawnType() != MobSpawnType.SPAWN_EGG && event.getSpawnType() != MobSpawnType.DISPENSER && event.getSpawnType() != MobSpawnType.MOB_SUMMONED;
         if (SinewConfig.ENABLE_PROGRESSION.get() && !event.isCanceled()) {
             if (validSpawn && level instanceof ServerLevel serverLevel) {
                 SinewWorldData worldData = SinewWorldData.get(serverLevel);

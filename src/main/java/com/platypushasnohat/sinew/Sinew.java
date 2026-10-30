@@ -3,6 +3,7 @@ package com.platypushasnohat.sinew;
 import com.mojang.logging.LogUtils;
 import com.platypushasnohat.sinew.config.SinewConfig;
 import com.platypushasnohat.sinew.debug.SinewDebugEntities;
+import com.platypushasnohat.sinew.debug.SinewDebugItems;
 import com.platypushasnohat.sinew.network.*;
 import com.platypushasnohat.sinew.registry.SinewAttachments;
 import com.platypushasnohat.sinew.registry.SinewAttributes;
@@ -44,6 +45,7 @@ public class Sinew {
         SinewDataComponents.DATA_COMPONENTS.register(modEventBus);
         SinewAttachments.ATTACHMENT_TYPES.register(modEventBus);
         SinewDebugEntities.ENTITY_TYPES.register(modEventBus);
+        SinewDebugItems.ITEMS.register(modEventBus);
         SinewEnchantmentEffects.ENTITY_EFFECTS.register(modEventBus);
         SinewEnchantmentEffects.LOCATION_EFFECTS.register(modEventBus);
         SinewLootModifierTypes.LOOT_MODIFIERS.register(modEventBus);
