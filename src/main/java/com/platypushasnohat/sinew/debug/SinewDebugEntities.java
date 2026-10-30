@@ -35,7 +35,7 @@ public class SinewDebugEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<SummonTestZombie>> SUMMON_TEST_ZOMBIE = ENTITY_TYPES.register("summon_test_zombie", () -> EntityType.Builder.of(SummonTestZombie::new, MobCategory.MONSTER).sized(0.6F, 1.95F).build("summon_test_zombie"));
     public static final DeferredHolder<EntityType<?>, EntityType<SummonTestMount>> SUMMON_TEST_MOUNT = ENTITY_TYPES.register("summon_test_mount", () -> EntityType.Builder.of(SummonTestMount::new, MobCategory.MONSTER).sized(1.4F, 0.9F).build("summon_test_mount"));
 
-    @EventBusSubscriber(modid = Sinew.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = Sinew.MOD_ID)
     public static class CommonModEvents {
 
         @SubscribeEvent
@@ -49,7 +49,7 @@ public class SinewDebugEntities {
         }
     }
 
-    @EventBusSubscriber(modid = Sinew.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = Sinew.MOD_ID, value = Dist.CLIENT)
     public static class ClientModEvents {
 
         private static final ResourceLocation ZOMBIE_TEXTURE = ResourceLocation.withDefaultNamespace("textures/entity/zombie/zombie.png");

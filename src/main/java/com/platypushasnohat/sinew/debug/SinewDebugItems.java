@@ -30,7 +30,7 @@ public class SinewDebugItems {
                 .build());
     }
 
-    @EventBusSubscriber(modid = Sinew.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = Sinew.MOD_ID)
     public static class CommonModEvents {
 
         @SubscribeEvent
