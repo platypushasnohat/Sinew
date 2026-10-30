@@ -25,8 +25,8 @@ public class SinewDebugItems {
 
     private static Item.Properties summonerProperties(double damage, double duration) {
         return new Item.Properties().stacksTo(1).attributes(ItemAttributeModifiers.builder()
-                .add(SinewAttributes.SUMMON_DAMAGE, new AttributeModifier(SUMMONER_MODIFIER, damage, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
-                .add(SinewAttributes.SUMMON_DURATION, new AttributeModifier(SUMMONER_MODIFIER, duration, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                .add(SinewAttributes.MINION_DAMAGE, new AttributeModifier(SUMMONER_MODIFIER, damage, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                .add(SinewAttributes.MINION_DURATION, new AttributeModifier(SUMMONER_MODIFIER, duration, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .build());
     }
 

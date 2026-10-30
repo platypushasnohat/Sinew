@@ -31,8 +31,8 @@ public class SinewAttributes {
     public static final DeferredHolder<Attribute, Attribute> NEGATIVE_EFFECT_DURATION = registerPercentageNegative("negative_effect_duration", 0.0D, -1024.0D, 1024.0D);
     public static final DeferredHolder<Attribute, Attribute> AMMO_SAVE_CHANCE = registerPercentage("ammo_save_chance", 0.0D, 0.0D, 1.0D);
     public static final DeferredHolder<Attribute, Attribute> MANA_CONSERVE_CHANCE = registerPercentage("mana_conserve_chance", 0.0D, 0.0D, 1.0D);
-    public static final DeferredHolder<Attribute, Attribute> SUMMON_DAMAGE = register("summon_damage", 0.0D, 0.0D, 2048.0D);
-    public static final DeferredHolder<Attribute, Attribute> SUMMON_DURATION = register("summon_duration", 0.0D, 0.0D, 1024.0D);
+    public static final DeferredHolder<Attribute, Attribute> MINION_DAMAGE = register("minion_damage", 0.0D, 0.0D, 2048.0D);
+    public static final DeferredHolder<Attribute, Attribute> MINION_DURATION = register("minion_duration", 0.0D, 0.0D, 1024.0D);
     public static final DeferredHolder<Attribute, Attribute> MINION_SLOTS = register("minion_slots", 5.0D, 0.0D, 1024.0D);
 
     @SuppressWarnings("SameParameterValue")

@@ -58,7 +58,7 @@ public abstract class SummonableMonster extends TamableMonster {
             summon.yHeadRot = owner.getYRot();
             summon.yBodyRot = owner.getYRot();
             EventHooks.finalizeMobSpawn(summon, level, level.getCurrentDifficultyAt(summon.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
-            summon.setSummoned(owner, getSummonStat(owner, weapon, hand, SinewAttributes.SUMMON_DAMAGE), getSummonStat(owner, weapon, hand, SinewAttributes.SUMMON_DURATION));
+            summon.setSummoned(owner, getSummonStat(owner, weapon, hand, SinewAttributes.MINION_DAMAGE), getSummonStat(owner, weapon, hand, SinewAttributes.MINION_DURATION));
             if (level.addFreshEntity(summon)) {
                 summon.onSummoned(owner);
                 result = summon;
@@ -166,6 +166,7 @@ public abstract class SummonableMonster extends TamableMonster {
         }
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
         Vec3 motion = new Vec3(x, y, z).normalize().add(this.random.triangle(0.0D, 0.0172275D * inaccuracy), this.random.triangle(0.0D, 0.0172275D * inaccuracy), this.random.triangle(0.0D, 0.0172275D * inaccuracy)).scale(velocity);
         this.setDeltaMovement(motion);

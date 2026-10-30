@@ -74,8 +74,8 @@ public class CommonEvents {
             event.add(entityType, SinewAttributes.NEGATIVE_EFFECT_DURATION);
             event.add(entityType, SinewAttributes.AMMO_SAVE_CHANCE);
             event.add(entityType, SinewAttributes.MANA_CONSERVE_CHANCE);
-            event.add(entityType, SinewAttributes.SUMMON_DAMAGE);
-            event.add(entityType, SinewAttributes.SUMMON_DURATION);
+            event.add(entityType, SinewAttributes.MINION_DAMAGE);
+            event.add(entityType, SinewAttributes.MINION_DURATION);
             event.add(entityType, SinewAttributes.MINION_SLOTS);
         });
     }

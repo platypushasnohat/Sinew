@@ -36,11 +36,7 @@ public class BodyChain {
 
     public void tick(float bodyYaw, float bodyPitch, float targetPitch) {
         if (!this.initialized) {
-            this.initialized = true;
-            this.renderYaw = this.prevRenderYaw = bodyYaw;
-            for (int i = 0; i < this.segmentYaw.length; i++) {
-                this.segmentYaw[i] = this.prevSegmentYaw[i] = bodyYaw;
-            }
+            this.tickInitialize(bodyYaw);
         }
         this.prevRenderYaw = this.renderYaw;
         this.prevRoll = this.roll;
@@ -55,6 +51,18 @@ public class BodyChain {
             this.segmentPitch[i] += (pitchReference - this.segmentPitch[i]) * this.pitchGains[i];
         }
 
+        this.tickRoll();
+    }
+
+    public void tickInitialize(float bodyYaw) {
+        this.initialized = true;
+        this.renderYaw = this.prevRenderYaw = bodyYaw;
+        for (int i = 0; i < this.segmentYaw.length; i++) {
+            this.segmentYaw[i] = this.prevSegmentYaw[i] = bodyYaw;
+        }
+    }
+
+    public void tickRoll() {
         float rollTarget = Mth.clamp(-Mth.wrapDegrees(this.renderYaw - this.prevRenderYaw) * this.rollPerYaw, -this.maxRoll, this.maxRoll);
         this.roll += (rollTarget - this.roll) * this.rollEase;
     }
