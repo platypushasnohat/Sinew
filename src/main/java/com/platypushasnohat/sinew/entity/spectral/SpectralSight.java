@@ -177,7 +177,9 @@ public class SpectralSight {
         double range = mob.getAttributeValue(Attributes.FOLLOW_RANGE);
         List<Player> players = mob.level().getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(range), player -> player != lostTarget && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(player) && canPerceive(player, mob));
         Player newTarget = players.stream().min(Comparator.comparingDouble(mob::distanceToSqr)).orElse(null);
-        if (newTarget != null) {
+        if (!lostTarget.isAlive() && newTarget != null) {
+            mob.setTarget(null);
+        } else if (newTarget != null) {
             mob.setTarget(newTarget);
         } else {
             mob.setTarget(null);
