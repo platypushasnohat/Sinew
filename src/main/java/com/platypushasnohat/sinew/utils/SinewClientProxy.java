@@ -1,5 +1,7 @@
 package com.platypushasnohat.sinew.utils;
 
+import com.platypushasnohat.sinew.events.ClientEvents;
+import com.platypushasnohat.sinew.events.custom.ScreenShakeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +13,7 @@ import java.util.UUID;
 
 public class SinewClientProxy extends SinewCommonProxy {
 
+    public static final List<ScreenShakeEvent> SCREEN_SHAKE_EVENTS = new ArrayList<>();
     public static List<UUID> blockedEntityRenders = new ArrayList<>();
 
     @Override
@@ -49,5 +52,10 @@ public class SinewClientProxy extends SinewCommonProxy {
     @Override
     public boolean isFirstPersonPlayer(Entity entity) {
         return entity.equals(Minecraft.getInstance().cameraEntity) && Minecraft.getInstance().options.getCameraType().isFirstPerson();
+    }
+
+    @Override
+    public void screenShake(ScreenShakeEvent event) {
+        ClientEvents.SCREEN_SHAKE_EVENTS.add(event);
     }
 }

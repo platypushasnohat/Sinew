@@ -1,5 +1,6 @@
 package com.platypushasnohat.sinew.utils;
 
+import com.platypushasnohat.sinew.events.custom.ScreenShakeEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
@@ -23,5 +24,8 @@ public class SinewCommonProxy {
 
     public boolean isFirstPersonPlayer(Entity entity) {
         return false;
+    }
+
+    public void screenShake(ScreenShakeEvent event) {
     }
 }
