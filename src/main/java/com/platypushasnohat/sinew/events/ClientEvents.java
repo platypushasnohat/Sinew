@@ -90,7 +90,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public void onClientTick(ClientTickEvent.Post event) {
+    public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft minecraft = Minecraft.getInstance();
         Entity cameraEntity = minecraft.getCameraEntity();
         prevShakeAmount = shakeAmount;
@@ -110,7 +110,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
+    public static void onComputeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         Minecraft minecraft = Minecraft.getInstance();
         float partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);;
         float lerpedShakeAmount = Mth.clamp(prevShakeAmount + (shakeAmount - prevShakeAmount) * partialTicks, 0, 4.0F);
