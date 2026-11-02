@@ -25,15 +25,18 @@ import net.minecraft.world.phys.Vec3;
 public class AfterImageParticle extends Particle {
 
     public final LivingEntity entity;
+    public final int baseLifetime;
     public final int color;
     public final float baseAlpha;
-    public int life;
 
-    public AfterImageParticle(LivingEntity entity, ClientLevel level, double x, double y, double z, int color, float baseAlpha) {
+    public AfterImageParticle(LivingEntity entity, ClientLevel level, double x, double y, double z, int baseLifetime, int color, float baseAlpha) {
         super(level, x, y, z);
         this.entity = entity;
+        this.baseLifetime = baseLifetime;
         this.color = color;
         this.baseAlpha = baseAlpha;
+        this.lifetime = this.baseLifetime;
+        this.alpha = this.baseAlpha;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class AfterImageParticle extends Particle {
         float red = SinewColorUtils.unpackRed(this.color);
         float green = SinewColorUtils.unpackGreen(this.color);
         float blue = SinewColorUtils.unpackBlue(this.color);
-        RenderSystem.setShaderColor(red, green, blue, this.baseAlpha / Math.abs((float) this.life + 1));
+        RenderSystem.setShaderColor(red, green, blue, this.alpha);
         PoseStack poseStack = new PoseStack();
         if (dispatcher.getRenderer(this.entity) instanceof LivingEntityRenderer renderer) {
             poseStack.pushPose();
@@ -93,8 +96,10 @@ public class AfterImageParticle extends Particle {
 
     @Override
     public void tick() {
-        this.life++;
-        if (this.life >= 3) {
+        this.age++;
+        float ageProgress = this.age / (float) this.lifetime;
+        this.setAlpha(this.baseAlpha - ageProgress);
+        if (this.age >= this.lifetime) {
             this.remove();
         }
     }

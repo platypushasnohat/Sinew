@@ -21,15 +21,15 @@ import java.util.function.Supplier;
 public class SinewParticleUtils {
 
     public static void createAfterImage(LivingEntity entity, Vec3 vector) {
-        createAfterImage(entity, vector, -1, 0.25F);
+        createAfterImage(entity, vector,3, -1, 0.25F);
     }
 
-    public static void createAfterImage(LivingEntity entity, Vec3 vector, int color, float alpha) {
+    public static void createAfterImage(LivingEntity entity, Vec3 vector, int lifetime, int color, float alpha) {
         if (entity.level().isClientSide && entity.level() instanceof ClientLevel clientLevel) {
             double x = entity.xOld + (vector.x / 1.5D);
             double y = entity.yOld;
             double z = entity.zOld + (vector.z / 1.5D);
-            Minecraft.getInstance().particleEngine.add(new AfterImageParticle(entity, clientLevel, x, y, z, color, alpha));
+            Minecraft.getInstance().particleEngine.add(new AfterImageParticle(entity, clientLevel, x, y, z, lifetime, color, alpha));
         }
     }
 
