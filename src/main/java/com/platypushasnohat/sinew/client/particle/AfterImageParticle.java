@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.platypushasnohat.sinew.utils.SinewColorUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -24,11 +25,15 @@ import net.minecraft.world.phys.Vec3;
 public class AfterImageParticle extends Particle {
 
     public final LivingEntity entity;
+    public final int color;
+    public final float baseAlpha;
     public int life;
 
-    public AfterImageParticle(LivingEntity entity, ClientLevel level, double x, double y, double z) {
+    public AfterImageParticle(LivingEntity entity, ClientLevel level, double x, double y, double z, int color, float baseAlpha) {
         super(level, x, y, z);
         this.entity = entity;
+        this.color = color;
+        this.baseAlpha = baseAlpha;
     }
 
     @Override
@@ -36,7 +41,10 @@ public class AfterImageParticle extends Particle {
         MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
         Vec3 cameraPosition = camera.getPosition();
         EntityRenderDispatcher dispatcher  = Minecraft.getInstance().getEntityRenderDispatcher();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.3F / Math.abs((float) this.life + 1));
+        float red = SinewColorUtils.unpackRed(this.color);
+        float green = SinewColorUtils.unpackGreen(this.color);
+        float blue = SinewColorUtils.unpackBlue(this.color);
+        RenderSystem.setShaderColor(red, green, blue, this.baseAlpha / Math.abs((float) this.life + 1));
         PoseStack poseStack = new PoseStack();
         if (dispatcher.getRenderer(this.entity) instanceof LivingEntityRenderer renderer) {
             poseStack.pushPose();

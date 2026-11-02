@@ -21,7 +21,16 @@ import java.util.function.Supplier;
 public class SinewParticleUtils {
 
     public static void createAfterImage(LivingEntity entity, Vec3 vector) {
-        Minecraft.getInstance().particleEngine.add(new AfterImageParticle(entity, (ClientLevel) entity.level(), entity.xOld + (vector.x / 1.5D), entity.yOld, entity.zOld + (vector.z / 1.5D)));
+        createAfterImage(entity, vector, -1, 0.25F);
+    }
+
+    public static void createAfterImage(LivingEntity entity, Vec3 vector, int color, float alpha) {
+        if (entity.level().isClientSide && entity.level() instanceof ClientLevel clientLevel) {
+            double x = entity.xOld + (vector.x / 1.5D);
+            double y = entity.yOld;
+            double z = entity.zOld + (vector.z / 1.5D);
+            Minecraft.getInstance().particleEngine.add(new AfterImageParticle(entity, clientLevel, x, y, z, color, alpha));
+        }
     }
 
     public static void queueParticlesOnBlockFaces(ServerLevel level, BlockPos pos, ParticleOptions particle, IntProvider count) {
