@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.platypushasnohat.sinew.client.render.SinewRenderTypes;
 import com.platypushasnohat.sinew.utils.SinewColorUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -51,7 +52,7 @@ public class AfterImageParticle extends Particle {
         PoseStack poseStack = new PoseStack();
         if (dispatcher.getRenderer(this.entity) instanceof LivingEntityRenderer renderer) {
             poseStack.pushPose();
-            bufferSource.getBuffer(RenderType.entityTranslucent(dispatcher.getRenderer(this.entity).getTextureLocation(this.entity)));
+            bufferSource.getBuffer(this.getAfterImageRenderType(dispatcher.getRenderer(this.entity).getTextureLocation(this.entity)));
             EntityModel model = renderer.getModel();
             model.attackTime = this.entity.getAttackAnim(partialTicks);
             model.young = this.entity.isBaby();
@@ -78,7 +79,7 @@ public class AfterImageParticle extends Particle {
             model.prepareMobModel(this.entity, walkPosition, walkSpeed, partialTicks);
             model.setupAnim(this.entity, walkPosition, walkSpeed, ageInTicks, yDiff, xRot);
             ResourceLocation textureLocation = renderer.getTextureLocation(this.entity);
-            RenderType renderType = RenderType.entityTranslucent(textureLocation);
+            RenderType renderType = this.getAfterImageRenderType(textureLocation);
             VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
             if (!this.entity.isInvisible()) {
                 model.renderToBuffer(poseStack, vertexConsumer, LightTexture.FULL_BRIGHT, LivingEntityRenderer.getOverlayCoords(this.entity, 0.0F), -1);
@@ -94,12 +95,16 @@ public class AfterImageParticle extends Particle {
         return ParticleRenderType.CUSTOM;
     }
 
+    public RenderType getAfterImageRenderType(ResourceLocation textureLocation) {
+        return SinewRenderTypes.getEyesAlphaEnabled(textureLocation);
+    }
+
     @Override
     public void tick() {
         this.age++;
         float ageProgress = this.age / (float) this.lifetime;
         this.setAlpha(this.baseAlpha - ageProgress);
-        if (this.age >= this.lifetime) {
+        if (this.age >= this.lifetime || this.alpha <= 0.0F) {
             this.remove();
         }
     }
