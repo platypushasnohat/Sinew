@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.platypushasnohat.sinew.client.render.SinewRenderTypes;
 import com.platypushasnohat.sinew.utils.SinewColorUtils;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -52,7 +51,7 @@ public class AfterImageParticle extends Particle {
         PoseStack poseStack = new PoseStack();
         if (dispatcher.getRenderer(this.entity) instanceof LivingEntityRenderer renderer) {
             poseStack.pushPose();
-            bufferSource.getBuffer(this.getAfterImageRenderType(dispatcher.getRenderer(this.entity).getTextureLocation(this.entity)));
+            bufferSource.getBuffer(RenderType.entityTranslucent(dispatcher.getRenderer(this.entity).getTextureLocation(this.entity)));
             EntityModel model = renderer.getModel();
             model.attackTime = this.entity.getAttackAnim(partialTicks);
             model.young = this.entity.isBaby();
@@ -96,15 +95,15 @@ public class AfterImageParticle extends Particle {
     }
 
     public RenderType getAfterImageRenderType(ResourceLocation textureLocation) {
-        return SinewRenderTypes.getEyesAlphaEnabled(textureLocation);
+        return RenderType.entityTranslucentEmissive(textureLocation);
     }
 
     @Override
     public void tick() {
         this.age++;
-        float ageProgress = this.age / (float) this.lifetime;
+        float ageProgress = (this.age / (float) this.lifetime) * this.baseAlpha;
         this.setAlpha(this.baseAlpha - ageProgress);
-        if (this.age >= this.lifetime || this.alpha <= 0.0F) {
+        if (this.age >= this.lifetime) {
             this.remove();
         }
     }
