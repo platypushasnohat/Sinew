@@ -215,6 +215,10 @@ public abstract class SummonableMonster extends TamableMonster {
         return this.entityData.get(LIFE_TICKS);
     }
 
+    public int getSummonAge() {
+        return this.getMaxLifeTicks() - this.getLifeTicks();
+    }
+
     public void setLifeTicks(int lifeTicks) {
         this.entityData.set(LIFE_TICKS, lifeTicks);
     }
