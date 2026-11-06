@@ -1,7 +1,9 @@
 package com.platypushasnohat.sinew.registry;
 
 import com.platypushasnohat.sinew.Sinew;
+import com.platypushasnohat.sinew.utils.BaseIdAttribute;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.neoforged.neoforge.common.PercentageAttribute;
@@ -11,6 +13,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class SinewAttributes {
 
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, Sinew.MOD_ID);
+
+    public static final ResourceLocation BASE_MINION_DAMAGE_ID = ResourceLocation.fromNamespaceAndPath("sinew", "base_summon_damage");
+    public static final ResourceLocation BASE_MINION_DURATION_ID = ResourceLocation.fromNamespaceAndPath("sinew", "base_summon_duration");
 
     public static final DeferredHolder<Attribute, Attribute> PROJECTILE_DAMAGE = register("projectile_damage", 0.0D, 0.0D, 2048.0D);
     public static final DeferredHolder<Attribute, Attribute> AIR_SPEED = registerPercentage("air_speed", 0.0D, 0.0D, 30.0D);
@@ -31,13 +36,17 @@ public class SinewAttributes {
     public static final DeferredHolder<Attribute, Attribute> NEGATIVE_EFFECT_DURATION = registerPercentageNegative("negative_effect_duration", 0.0D, -1024.0D, 1024.0D);
     public static final DeferredHolder<Attribute, Attribute> AMMO_SAVE_CHANCE = registerPercentage("ammo_save_chance", 0.0D, 0.0D, 1.0D);
     public static final DeferredHolder<Attribute, Attribute> MANA_CONSERVE_CHANCE = registerPercentage("mana_conserve_chance", 0.0D, 0.0D, 1.0D);
-    public static final DeferredHolder<Attribute, Attribute> MINION_DAMAGE = register("minion_damage", 0.0D, 0.0D, 2048.0D);
-    public static final DeferredHolder<Attribute, Attribute> MINION_DURATION = register("minion_duration", 0.0D, 0.0D, 1024.0D);
+    public static final DeferredHolder<Attribute, Attribute> MINION_DAMAGE = registerBaseIdAttribute("minion_damage", 0.0D, 0.0D, 2048.0D, BASE_MINION_DAMAGE_ID);
+    public static final DeferredHolder<Attribute, Attribute> MINION_DURATION = registerBaseIdAttribute("minion_duration", 0.0D, 0.0D, 1024.0D, BASE_MINION_DURATION_ID);
     public static final DeferredHolder<Attribute, Attribute> MINION_SLOTS = register("minion_slots", 5.0D, 0.0D, 1024.0D);
 
     @SuppressWarnings("SameParameterValue")
     private static DeferredHolder<Attribute, Attribute> register(String name, double defaultValue, double minimumValue, double maximumValue) {
         return ATTRIBUTES.register(name, () -> new RangedAttribute("attribute." + Sinew.MOD_ID + ".name.generic." + name, defaultValue, minimumValue, maximumValue).setSyncable(true));
+    }
+
+    private static DeferredHolder<Attribute, Attribute> registerBaseIdAttribute(String name, double defaultValue, double minimumValue, double maximumValue, ResourceLocation id) {
+        return ATTRIBUTES.register(name, () -> new BaseIdAttribute("attribute." + Sinew.MOD_ID + ".name.generic." + name, defaultValue, minimumValue, maximumValue, id).setSyncable(true));
     }
 
     @SuppressWarnings("SameParameterValue")
